@@ -1,0 +1,5 @@
+{
+  "description": "A dynamic, full-stack portfolio website built with Next.js, Tailwind CSS, and Framer Motion. Features an integrated AI chatbot powered by the Gemini API.",
+  "requestFramePermissions": [],
+  "name": "App"
+}
