@@ -1,29 +1,44 @@
-import { NextRequest, NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
+import { NextResponse } from 'next/server';
+import dbConnect from '@/lib/db';
 import Message from '@/models/Message';
+import { contactSchema } from '@/lib/validation';
+import { sendContactEmail } from '@/lib/mail';
 
-export async function POST(req: NextRequest) {
+export async function POST(request: Request) {
+  console.log('Received contact form submission request.');
   try {
-    await connectDB();
+    const body = await request.json();
+    
+    // 1. Validate input
+    const validation = contactSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json(
+        { message: 'Invalid input.', errors: validation.error.flatten().fieldErrors },
+        { status: 400 }
+      );
+    }
+    
+    const { name, email, message } = validation.data;
 
-    const { name, email, message } = await req.json();
-
-    if (!name || !email || !message) {
-      return NextResponse.json({ error: 'All fields are required.' }, { status: 400 });
+    // 2. Save to database
+    await dbConnect();
+    await Message.create({ name, email, message });
+    
+    // 3. Send email notification
+    try {
+        await sendContactEmail(name, email, message);
+    } catch (emailError) {
+        // Log the email error but don't fail the request if DB write was successful
+        console.error("Email failed to send but message was saved to DB:", emailError);
     }
 
-    const newMessage = new Message({
-      name,
-      email,
-      message,
-    });
-
-    await newMessage.save();
-
-    return NextResponse.json({ success: true, message: 'Message sent successfully!' }, { status: 201 });
+    return NextResponse.json({ message: 'Message sent successfully!' }, { status: 201 });
 
   } catch (error) {
-    console.error('Contact form submission error:', error);
-    return NextResponse.json({ error: 'An internal server error occurred.' }, { status: 500 });
+    console.error('API Error:', error);
+    if (error instanceof Error) {
+        return NextResponse.json({ message: 'An internal server error occurred.', error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ message: 'An unknown internal server error occurred.' }, { status: 500 });
   }
 }

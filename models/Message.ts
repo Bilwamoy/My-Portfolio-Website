@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IMessage extends Document {
   name: string;
@@ -8,25 +8,12 @@ export interface IMessage extends Document {
 }
 
 const MessageSchema: Schema = new Schema({
-  name: {
-    type: String,
-    required: [true, 'Please provide a name.'],
-    trim: true,
-  },
-  email: {
-    type: String,
-    required: [true, 'Please provide an email.'],
-    trim: true,
-    match: [/.+\@.+\..+/, 'Please fill a valid email address'],
-  },
-  message: {
-    type: String,
-    required: [true, 'Please provide a message.'],
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  name: { type: String, required: [true, 'Please provide a name.'], trim: true },
+  email: { type: String, required: [true, 'Please provide an email.'], trim: true, match: [/.+@.+\..+/, 'Please enter a valid email address.'] },
+  message: { type: String, required: [true, 'Please provide a message.'], trim: true },
+  createdAt: { type: Date, default: Date.now }
 });
 
-export default mongoose.models.Message || mongoose.model<IMessage>('Message', MessageSchema);
+const Message: Model<IMessage> = mongoose.models.Message || mongoose.model<IMessage>('Message', MessageSchema);
+
+export default Message;

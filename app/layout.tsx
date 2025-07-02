@@ -1,27 +1,34 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import React from "react";
-import "./styles/global.css";
-import Chatbot from "@/components/Chatbot";
 
-const inter = Inter({ subsets: ["latin"] });
+import './globals.css';
+import { Sora, Orbitron } from 'next/font/google';
 
-export const metadata: Metadata = {
-  title: "Your Name - Developer Portfolio",
-  description: "Developer that puts your Ideas everywhere. AI-powered portfolio.",
+const sora = Sora({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-sora',
+});
+
+const orbitron = Orbitron({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-orbitron',
+});
+
+export const metadata = {
+  title: "Bilwamoy | Interactive Portfolio",
+  description: "An interactive, animated portfolio website for Bilwamoy (Joy) to showcase projects, skills, and experience as a creative developer.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className={`scroll-smooth ${sora.variable} ${orbitron.variable}`}>
+      <body className="bg-slate-900 leading-relaxed text-slate-400 antialiased selection:bg-sky-300 selection:text-sky-900 font-sora">
         {children}
-        <Chatbot />
       </body>
     </html>
-  );
+  )
 }

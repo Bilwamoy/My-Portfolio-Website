@@ -1,24 +1,20 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import Navbar from '@/components/Navbar';
-import AboutSection from '@/components/AboutSection';
-import ProjectsSection from '@/components/ProjectsSection';
-import SkillsSection from '@/components/SkillsSection';
-import ContactSection from '@/components/ContactSection';
-import Footer from '@/components/Footer';
-import BackgroundCanvas from '@/components/BackgroundCanvas';
-import HeroSection from '@/components/HeroSection';
+import Navbar from './components/Navbar';
+import AboutSection from './components/AboutSection';
+import ProjectsSection from './components/ProjectsSection';
+import SkillsSection from './components/SkillsSection';
+import ContactSection from './components/ContactSection';
+import Footer from './components/Footer';
+import BackgroundCanvas from './components/BackgroundCanvas';
+import HeroSection from './components/HeroSection';
 
-export default function Home() {
+const App: React.FC = () => {
   const [cursorPosition, setCursorPosition] = useState({ x: -100, y: -100 });
   const [isHovering, setIsHovering] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('about');
 
   useEffect(() => {
-    document.body.classList.add('custom-cursor');
-    
     const updateCursorPosition = (e: MouseEvent) => {
       setCursorPosition({ x: e.clientX, y: e.clientY });
     };
@@ -43,7 +39,6 @@ export default function Home() {
       window.removeEventListener('mousemove', updateCursorPosition);
       document.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseout', handleMouseOut);
-      document.body.classList.remove('custom-cursor');
     };
   }, []);
 
@@ -69,7 +64,7 @@ export default function Home() {
       <BackgroundCanvas cursorPosition={cursorPosition} />
 
       <motion.div
-        className="fixed z-[60] h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-sky-400 pointer-events-none transition-transform duration-150 ease-in-out hidden md:block"
+        className="fixed z-[60] h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-sky-400 pointer-events-none transition-transform duration-150 ease-in-out"
         animate={{
           left: cursorPosition.x,
           top: cursorPosition.y,
@@ -79,12 +74,12 @@ export default function Home() {
         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
       />
       <motion.div
-        className="fixed z-[60] h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-400 pointer-events-none hidden md:block"
+        className="fixed z-[60] h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-400 pointer-events-none"
         animate={{ left: cursorPosition.x, top: cursorPosition.y }}
         transition={{ type: 'spring', stiffness: 800, damping: 40 }}
       />
       
-      <div className="relative z-10 mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
+      <div className="relative z-10 mx-auto min-h-screen max-w-screen-xl px-6 py-12 font-sans md:px-12 md:py-20 lg:px-24 lg:py-0">
         <div className="lg:flex lg:justify-between lg:gap-4">
           <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/2 lg:flex-col lg:justify-between lg:py-24">
             <HeroSection />
@@ -101,4 +96,6 @@ export default function Home() {
       </div>
     </>
   );
-}
+};
+
+export default App;

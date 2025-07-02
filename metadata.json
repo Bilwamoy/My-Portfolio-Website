@@ -1,5 +1,5 @@
 {
-  "description": "A dynamic, full-stack portfolio website built with Next.js, Tailwind CSS, and Framer Motion. Features an integrated AI chatbot powered by the Gemini API.",
-  "requestFramePermissions": [],
-  "name": "App"
+  "name": "Bilwamoy (Joy) | Interactive Portfolio",
+  "description": "An interactive, animated portfolio website for Bilwamoy (Joy) to showcase projects, skills, and experience as a creative developer.",
+  "requestFramePermissions": []
 }
