@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
         >
           Visual Studio Code
         </a>{' '}
-        by yours truly. Built with{' '}
+        by yours truly -- Joy . Built with{' '}
         <a
           href="https://nextjs.org/"
           className="font-medium text-slate-400 hover:text-sky-400 focus-visible:text-sky-400"
