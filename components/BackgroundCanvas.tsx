@@ -65,7 +65,7 @@ const Scene: React.FC<SceneProps> = ({ cursorPosition }) => {
 
   return (
     <group ref={meshRef}>
-      <TorusKnot args={torusKnotArgs}>
+      <TorusKnot args={[...torusKnotArgs]}> {/* Spread to create a mutable array */}
         <meshStandardMaterial 
           color="#38bdf8" 
           emissive="#22c55e"
