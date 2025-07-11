@@ -62,9 +62,8 @@ export default function Home() {
   const [pageLoaded, setPageLoaded] = useState(false);
 
   useEffect(() => {
-    if (!isLoading) {
-      document.body.classList.add('custom-cursor');
-    }
+    // Ensure custom cursor class is removed to show normal cursor
+    document.body.classList.remove('custom-cursor');
     
     const updateCursorPosition = (e: MouseEvent) => {
       setCursorPosition({ x: e.clientX, y: e.clientY });

@@ -82,14 +82,7 @@ html {
   scrollbar-width: none;
 }
 
-/* Custom cursor styles */
-body.custom-cursor {
-  cursor: none;
-}
-
-body.custom-cursor * {
-  cursor: none !important;
-}
+/* Custom cursor styles disabled - normal cursor will always be visible */
 
 /* Loading animation styles */
 .loading-screen {
