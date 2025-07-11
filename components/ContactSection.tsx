@@ -60,24 +60,24 @@ const ContactSection: React.FC = () => {
 
   return (
     <Section id="contact" title="Contact">
-        <h2 className="text-2xl font-bold text-slate-200 mb-4 font-orbitron">Get In Touch</h2>
-        <p className="mb-4 max-w-lg">
+        <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-200 mb-4 font-orbitron">Get In Touch</h2>
+        <p className="mb-6 max-w-lg text-lg leading-relaxed text-slate-600 dark:text-slate-300">
             I&apos;m currently open to new opportunities and collaborations. Whether you have a question, a project proposal, or just want to say hi, my inbox is always open.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 max-w-lg">
             <div className="space-y-6">
                 <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">Name</label>
-                    <input type="text" id="name" name="name" required className="block w-full rounded-md border-slate-700 bg-slate-800 px-3 py-2 text-slate-200 placeholder-slate-500 focus:border-sky-500 focus:ring-sky-500" />
+                    <label htmlFor="name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Name</label>
+                    <input type="text" id="name" name="name" required className="block w-full rounded-md border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-slate-800 px-3 py-2 text-slate-800 dark:text-slate-200 placeholder-slate-500 focus:border-sky-500 focus:ring-sky-500 backdrop-blur-sm" />
                 </div>
                 <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">Email</label>
-                    <input type="email" id="email" name="email" required className="block w-full rounded-md border-slate-700 bg-slate-800 px-3 py-2 text-slate-200 placeholder-slate-500 focus:border-sky-500 focus:ring-sky-500" />
+                    <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                    <input type="email" id="email" name="email" required className="block w-full rounded-md border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-slate-800 px-3 py-2 text-slate-800 dark:text-slate-200 placeholder-slate-500 focus:border-sky-500 focus:ring-sky-500 backdrop-blur-sm" />
                 </div>
                 <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-1">Message</label>
-                    <textarea id="message" name="message" rows={4} required className="block w-full rounded-md border-slate-700 bg-slate-800 px-3 py-2 text-slate-200 placeholder-slate-500 focus:border-sky-500 focus:ring-sky-500"></textarea>
+                    <label htmlFor="message" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Message</label>
+                    <textarea id="message" name="message" rows={4} required className="block w-full rounded-md border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-slate-800 px-3 py-2 text-slate-800 dark:text-slate-200 placeholder-slate-500 focus:border-sky-500 focus:ring-sky-500 backdrop-blur-sm"></textarea>
                 </div>
             </div>
             <div className="mt-6">

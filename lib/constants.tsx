@@ -19,27 +19,42 @@ export const PROJECTS: Project[] = [
     title: "Animated E-commerce Website",
     description: "Developed a fully functional e-commerce website with animated UI using React and Tailwind CSS. Features include product listing, cart management, and user authentication.",
     tags: ["React", "Tailwind CSS", "Express.js", "MongoDB"],
+    image: "/project-placeholder.png",
+    liveDemoUrl: "#",
+    githubUrl: "#",
   },
 
   {
     title: "Coffee Shop Web Application",
     description: "Created a fully functional online coffee shop (except real payment integration). Features include product listing, cart, checkout, and user login system.",
     tags: ["React", "Node.js", "MongoDB"],
+    image: "/project-placeholder.png",
+    liveDemoUrl: "#",
+    githubUrl: "#",
   },
   {
     title: "URL Shortener",
     description: "A React-based web app to shorten URLs using backend APIs. Includes features like redirection, copy to clipboard, and user history.",
     tags: ["React", "Backend API"],
+    image: "/project-placeholder.png",
+    liveDemoUrl: "#",
+    githubUrl: "#",
   },
   {
     title: "Gemini Clone",
     description: "Designed a Gemini-inspired AI chatbot UI using React with clean UX and dummy AI flow, focusing on a modern and responsive user interface.",
     tags: ["React", "UI/UX Design"],
+    image: "/project-placeholder.png",
+    liveDemoUrl: "#",
+    githubUrl: "#",
   },
   {
     title: "Travel Blog Website",
     description: "A personal travel blog website built with Next.js and Tailwind CSS, featuring dynamic content, responsive design, and a clean user interface.",
     tags: ["expressjs", "tailwindcss", "react"],
+    image: "/project-placeholder.png",
+    liveDemoUrl: "#",
+    githubUrl: "#",
   },
 ];
 

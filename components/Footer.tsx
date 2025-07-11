@@ -4,12 +4,12 @@ import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="max-w-md pb-16 text-sm text-slate-500 sm:pb-0">
+    <footer className="max-w-md pb-16 text-sm text-slate-600 dark:text-slate-500 sm:pb-0">
       <p>
         Loosely designed in{' '}
         <a
           href="https://www.figma.com"
-          className="font-medium text-slate-400 hover:text-sky-400 focus-visible:text-sky-400"
+          className="font-medium text-slate-700 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 focus-visible:text-sky-600 dark:focus-visible:text-sky-400"
           target="_blank"
           rel="noreferrer noopener"
         >
@@ -18,7 +18,7 @@ const Footer: React.FC = () => {
         and coded in{' '}
         <a
           href="https://code.visualstudio.com/"
-          className="font-medium text-slate-400 hover:text-sky-400 focus-visible:text-sky-400"
+          className="font-medium text-slate-700 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 focus-visible:text-sky-600 dark:focus-visible:text-sky-400"
           target="_blank"
           rel="noreferrer noopener"
         >
@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
         by yours truly -- Joy . Built with{' '}
         <a
           href="https://nextjs.org/"
-          className="font-medium text-slate-400 hover:text-sky-400 focus-visible:text-sky-400"
+          className="font-medium text-slate-700 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 focus-visible:text-sky-600 dark:focus-visible:text-sky-400"
           target="_blank"
           rel="noreferrer noopener"
         >
@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
         and{' '}
         <a
           href="https://tailwindcss.com/"
-          className="font-medium text-slate-400 hover:text-sky-400 focus-visible:text-sky-400"
+          className="font-medium text-slate-700 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 focus-visible:text-sky-600 dark:focus-visible:text-sky-400"
           target="_blank"
           rel="noreferrer noopener"
         >

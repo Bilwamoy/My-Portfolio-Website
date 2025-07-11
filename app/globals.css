@@ -2,26 +2,138 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom scrollbar for a more modern feel */
+@layer base {
+  :root {
+    /* Light theme variables */
+    --background: 0 0% 100%;
+    --foreground: 31 31% 12%;
+    --card: 255 255 255 / 0.2;
+    --card-foreground: 31 31% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 31 31% 12%;
+    --primary: 31 31% 12%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 31 31% 12%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 31 31% 12%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    
+    /* Custom light theme variables */
+    --light-bg-gradient: linear-gradient(135deg, #f5f7fa, #e4ecf7);
+    --light-card-bg: rgba(255, 255, 255, 0.2);
+    --light-text: #1f1f1f;
+    --light-border: rgba(255, 255, 255, 0.3);
+    --light-shadow: rgba(31, 38, 135, 0.1);
+  }
+
+  .dark {
+    /* Dark theme variables (original theme) */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: hidden; /* Prevent horizontal scrollbar */
+  }
+  
+  html {
+    overflow-x: hidden; /* Prevent horizontal scrollbar */
+  }
+}
+
+/* Hide scrollbar completely for a cleaner look */
 ::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #0f172a;
-}
-::-webkit-scrollbar-thumb {
-  background: #38bdf8;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #7dd3fc;
+  width: 0px;
+  background: transparent;
 }
 
-body {
-  background-color: #0f172a;
-  color: #94a3b8;
+/* For Firefox */
+html {
+  scrollbar-width: none;
 }
 
+/* Custom cursor styles */
 body.custom-cursor {
-   cursor: none;
+  cursor: none;
+}
+
+body.custom-cursor * {
+  cursor: none !important;
+}
+
+/* Loading animation styles */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease-out;
+}
+
+.loading-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Loader animation */
+.loader {
+  width: 60px;
+  height: 60px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Page entrance animation */
+.page-content {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.page-content.loaded {
+  opacity: 1;
+  transform: translateY(0);
 }

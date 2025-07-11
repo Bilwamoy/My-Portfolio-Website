@@ -1,51 +1,110 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
 
-interface NavbarProps {
-  activeSection: string;
-}
+const navItems = [
+  { id: 'about', label: 'About' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'resume', label: 'Resume' },
+  { id: 'contact', label: 'Contact' },
+];
 
-const NavLink: React.FC<{ href: string; title: string; isActive: boolean }> = ({ href, title, isActive }) => (
-  <a href={href} className="group flex items-center py-3">
-    <motion.span
-      className="nav-indicator mr-4 h-px bg-slate-600 transition-all group-hover:bg-sky-400"
-      initial={{ width: '2rem' }}
-      animate={{ width: isActive ? '4rem' : '2rem', backgroundColor: isActive ? '#38bdf8' : '#475569' }}
-      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-    ></motion.span>
-    <span
-      className={`nav-text text-xs font-bold uppercase tracking-widest ${isActive ? 'text-sky-300' : 'text-slate-500'} transition-colors group-hover:text-sky-300`}
-    >
-      {title}
-    </span>
-  </a>
-);
+const Navbar: React.FC<{ activeSection: string }> = ({ activeSection }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-const Navbar: React.FC<NavbarProps> = ({ activeSection }) => {
-  const navLinks = [
-    { id: 'about', title: 'About' },
-    { id: 'projects', title: 'Projects' },
-    { id: 'skills', title: 'Skills' },
-    { id: 'contact', title: 'Contact' }
-  ];
+  const scrollToSection = (id: string) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsOpen(false);
+  };
 
   return (
-    <nav className="nav hidden lg:block" aria-label="In-page jump links">
-      <motion.ul
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
-        className="mt-16 w-max"
-      >
-        {navLinks.map((link) => (
-          <li key={link.id}>
-            <NavLink href={`#${link.id}`} title={link.title} isActive={activeSection === link.id} />
-          </li>
-        ))}
-      </motion.ul>
+    <>
+      {/* Fixed Theme Toggle - Top Right */}
+      <div className="fixed top-4 right-4 z-[60]">
+        <ThemeToggle />
+      </div>
+
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm md:relative md:bg-transparent md:backdrop-blur-none">
+      <div className="mx-auto max-w-screen-xl px-6 py-3 md:px-12">
+        <div className="flex items-center justify-between">
+          <div className="hidden md:block">
+            <ul className="flex flex-col space-y-4">
+              {navItems.map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={`#${item.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollToSection(item.id);
+                    }}
+                    className={`group flex items-center py-2 transition-all ${activeSection === item.id
+                        ? 'text-sky-400'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-sky-500 dark:hover:text-sky-300'
+                      }`}
+                  >
+                    <motion.span
+                      className="mr-4 h-px bg-slate-600 transition-all group-hover:bg-sky-400"
+                      initial={{ width: '2rem' }}
+                      animate={{ width: activeSection === item.id ? '4rem' : '2rem', backgroundColor: activeSection === item.id ? '#38bdf8' : '#475569' }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                    ></motion.span>
+                    <span className="text-xs font-bold uppercase tracking-widest">
+                      {item.label}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-slate-700 dark:text-slate-200"
+              aria-label={isOpen ? 'Close navigation' : 'Open navigation'}
+              aria-expanded={isOpen}
+              aria-controls="mobile-nav"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {isOpen && (
+        <motion.div
+          id="mobile-nav"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm"
+        >
+          <ul className="flex flex-col items-center space-y-4 py-4">
+            {navItems.map((item) => (
+              <li key={item.id}>
+                <a
+                  href={`#${item.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection(item.id);
+                  }}
+                  className="text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-300"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
+      )}
     </nav>
+    </>
   );
 };
 
