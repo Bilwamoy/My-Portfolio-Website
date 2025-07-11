@@ -84,12 +84,13 @@ export default function Home() {
       }
     };
     
-    window.addEventListener('mousemove', updateCursorPosition);
+    const throttledUpdateCursorPosition = throttle(updateCursorPosition, 50);
+    window.addEventListener('mousemove', throttledUpdateCursorPosition);
     document.addEventListener('mouseover', handleMouseOver);
     document.addEventListener('mouseout', handleMouseOut);
 
     return () => {
-      window.removeEventListener('mousemove', updateCursorPosition);
+      window.removeEventListener('mousemove', throttledUpdateCursorPosition);
       document.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseout', handleMouseOut);
       document.body.classList.remove('custom-cursor');
@@ -193,7 +194,7 @@ export default function Home() {
         
         <div className="relative z-10 mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
           <div className="lg:flex lg:justify-between lg:gap-4">
-            <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:flex-1 lg:flex-col lg:justify-between lg:py-24 lg:overflow-y-auto">
+            <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/3 lg:flex-col lg:justify-between lg:py-24 lg:overflow-y-auto"> {/* Changed lg:flex-1 to lg:w-1/3 */}
               <ErrorBoundary>
                 <HeroSection />
               </ErrorBoundary>
@@ -201,7 +202,7 @@ export default function Home() {
                 <Navbar activeSection={activeSection} />
               </ErrorBoundary>
             </header>
-            <main id="content" className="pt-24 lg:flex-1 lg:py-24">
+            <main id="content" className="pt-24 lg:w-2/3 lg:py-24"> {/* Changed lg:flex-1 to lg:w-2/3 and removed lg:flex-1 which is not needed with lg:w-2/3 */}
               <ErrorBoundary>
                 <AboutSection />
               </ErrorBoundary>
