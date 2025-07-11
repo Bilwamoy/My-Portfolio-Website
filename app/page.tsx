@@ -12,6 +12,8 @@ import Footer from '@/components/Footer';
 import BackgroundCanvas from '@/components/BackgroundCanvas';
 import HeroSection from '@/components/HeroSection';
 import LoadingScreen from '@/components/LoadingScreen';
+import FloatingParticles from '@/components/animations/FloatingParticles';
+import SmoothScroll from '@/components/animations/SmoothScroll';
 import { PerformanceMonitor, throttle } from '@/lib/performance';
 
 // Error Boundary Component
@@ -137,92 +139,99 @@ export default function Home() {
 
   return (
     <ErrorBoundary>
-      {/* Loading Screen */}
-      {isLoading && (
-        <ErrorBoundary>
-          <LoadingScreen onLoadingComplete={handleLoadingComplete} />
-        </ErrorBoundary>
-      )}
-
-      {/* Main Content */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: pageLoaded ? 1 : 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className={pageLoaded ? 'page-content loaded' : 'page-content'}
-      >
-        {/* Theme-aware background */}
-        <div className="fixed inset-0 -z-20 bg-slate-900 dark:bg-slate-900" 
-             style={{
-               background: 'var(--light-bg-gradient)',
-             }}>
-          <div className="dark:hidden absolute inset-0" 
-               style={{
-                 background: 'linear-gradient(135deg, #f5f7fa, #e4ecf7)',
-               }} />
-          <div className="hidden dark:block absolute inset-0 bg-slate-900" />
-        </div>
-
-        <ErrorBoundary fallback={<div className="fixed inset-0 -z-10 bg-gradient-to-br from-slate-900 to-slate-800" />}>
-          <Suspense fallback={<div className="fixed inset-0 -z-10 bg-gradient-to-br from-slate-900/20 to-slate-800/20" />}>
-            <BackgroundCanvas cursorPosition={cursorPosition} />
-          </Suspense>
-        </ErrorBoundary>
-
-        {/* Custom Cursor */}
-        {!isLoading && (
-          <>
-            <motion.div
-              className="fixed z-[60] h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-sky-400 pointer-events-none transition-transform duration-150 ease-in-out hidden md:block"
-              animate={{
-                left: cursorPosition.x,
-                top: cursorPosition.y,
-                scale: isHovering ? 1.5 : 1,
-                opacity: isHovering ? 0.5 : 1,
-              }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            />
-            <motion.div
-              className="fixed z-[60] h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-400 pointer-events-none hidden md:block"
-              animate={{ left: cursorPosition.x, top: cursorPosition.y }}
-              transition={{ type: 'spring', stiffness: 800, damping: 40 }}
-            />
-          </>
+      <SmoothScroll>
+        {/* Loading Screen */}
+        {isLoading && (
+          <ErrorBoundary>
+            <LoadingScreen onLoadingComplete={handleLoadingComplete} />
+          </ErrorBoundary>
         )}
-        
-        <div className="relative z-10 mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
-          <div className="lg:flex lg:justify-between lg:gap-4">
-            <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:flex-1 lg:flex-col lg:justify-between lg:py-24 lg:overflow-y-auto">
-              <ErrorBoundary>
-                <HeroSection />
-              </ErrorBoundary>
-              <ErrorBoundary>
-                <Navbar activeSection={activeSection} />
-              </ErrorBoundary>
-            </header>
-            <main id="content" className="pt-24 lg:flex-1 lg:py-24">
-              <ErrorBoundary>
-                <AboutSection />
-              </ErrorBoundary>
-              <ErrorBoundary>
-                <ProjectsSection />
-              </ErrorBoundary>
-              <ErrorBoundary>
-                <SkillsSection />
-              </ErrorBoundary>
-              <ErrorBoundary>
-                <ResumeSection />
-              </ErrorBoundary>
-              <ErrorBoundary>
-                <ContactSection />
-              </ErrorBoundary>
-              <ErrorBoundary>
-                <Footer />
-              </ErrorBoundary>
-            </main>
+
+        {/* Main Content */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: pageLoaded ? 1 : 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className={pageLoaded ? 'page-content loaded' : 'page-content'}
+        >
+          {/* Theme-aware background */}
+          <div className="fixed inset-0 -z-20 bg-slate-900 dark:bg-slate-900" 
+               style={{
+                 background: 'var(--light-bg-gradient)',
+               }}>
+            <div className="dark:hidden absolute inset-0" 
+                 style={{
+                   background: 'linear-gradient(135deg, #f5f7fa, #e4ecf7)',
+                 }} />
+            <div className="hidden dark:block absolute inset-0 bg-slate-900" />
           </div>
-        </div>
-      </motion.div>
+
+          {/* Floating Particles Background */}
+          <ErrorBoundary fallback={<div />}>
+            <FloatingParticles mouse={cursorPosition} className="opacity-30" />
+          </ErrorBoundary>
+
+          <ErrorBoundary fallback={<div className="fixed inset-0 -z-10 bg-gradient-to-br from-slate-900 to-slate-800" />}>
+            <Suspense fallback={<div className="fixed inset-0 -z-10 bg-gradient-to-br from-slate-900/20 to-slate-800/20" />}>
+              <BackgroundCanvas cursorPosition={cursorPosition} />
+            </Suspense>
+          </ErrorBoundary>
+
+          {/* Custom Cursor */}
+          {!isLoading && (
+            <>
+              <motion.div
+                className="fixed z-[60] h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-sky-400 pointer-events-none transition-transform duration-150 ease-in-out hidden md:block"
+                animate={{
+                  left: cursorPosition.x,
+                  top: cursorPosition.y,
+                  scale: isHovering ? 1.5 : 1,
+                  opacity: isHovering ? 0.5 : 1,
+                }}
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              />
+              <motion.div
+                className="fixed z-[60] h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-400 pointer-events-none hidden md:block"
+                animate={{ left: cursorPosition.x, top: cursorPosition.y }}
+                transition={{ type: 'spring', stiffness: 800, damping: 40 }}
+              />
+            </>
+          )}
+          
+          <div className="relative z-10 mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
+            <div className="lg:flex lg:justify-between lg:gap-4">
+              <header className="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:flex-1 lg:flex-col lg:justify-between lg:py-24 lg:overflow-y-auto">
+                <ErrorBoundary>
+                  <HeroSection />
+                </ErrorBoundary>
+                <ErrorBoundary>
+                  <Navbar activeSection={activeSection} />
+                </ErrorBoundary>
+              </header>
+              <main id="content" className="pt-24 lg:flex-1 lg:py-24">
+                <ErrorBoundary>
+                  <AboutSection />
+                </ErrorBoundary>
+                <ErrorBoundary>
+                  <ProjectsSection />
+                </ErrorBoundary>
+                <ErrorBoundary>
+                  <SkillsSection />
+                </ErrorBoundary>
+                <ErrorBoundary>
+                  <ResumeSection />
+                </ErrorBoundary>
+                <ErrorBoundary>
+                  <ContactSection />
+                </ErrorBoundary>
+                <ErrorBoundary>
+                  <Footer />
+                </ErrorBoundary>
+              </main>
+            </div>
+          </div>
+        </motion.div>
+      </SmoothScroll>
     </ErrorBoundary>
   );
 }
