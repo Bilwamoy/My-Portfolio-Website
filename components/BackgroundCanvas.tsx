@@ -39,8 +39,8 @@ class ThreeErrorBoundary extends React.Component<
 const Scene: React.FC<SceneProps> = ({ cursorPosition }) => {
   const meshRef = useRef<Group>(null);
 
-  // Memoize the TorusKnot args to prevent recreation
-  const torusKnotArgs = useMemo(() => [1, 0.2, 64, 16, 1, 3] as const, []);
+  // Properly type the args as a tuple for TorusKnot
+  const torusKnotArgs = useMemo(() => [1, 0.2, 64, 16, 1, 3] as [number, number, number, number, number, number], []);
 
   useFrame((state, delta) => {
     if (!meshRef.current || state.viewport.width === 0 || state.viewport.height === 0) {
@@ -67,7 +67,7 @@ const Scene: React.FC<SceneProps> = ({ cursorPosition }) => {
     <group ref={meshRef}>
       <TorusKnot args={torusKnotArgs}>
         <meshStandardMaterial 
-          color="#38bdf8" 
+          color="#38bdf8"
           emissive="#22c55e"
           emissiveIntensity={0.05}
           metalness={0.6} 
@@ -93,7 +93,7 @@ const BackgroundCanvas: React.FC<SceneProps> = ({ cursorPosition }) => {
             camera={{ position: [0, 0, 5], fov: 50 }}
             dpr={[1, 1.5]} // Limit device pixel ratio for performance
             performance={{ min: 0.5 }} // Allow frame rate to drop for performance
-            gl={{ 
+            gl={{
               antialias: false, // Disable antialiasing for better performance
               alpha: true,
               powerPreference: "default" // Use default power preference
