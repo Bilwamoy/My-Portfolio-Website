@@ -48,8 +48,8 @@ const Scene: React.FC<SceneProps> = ({ cursorPosition }) => {
     }
 
     // Reduced rotation speed for better performance
-    meshRef.current.rotation.x += delta * 0.05;
-    meshRef.current.rotation.y += delta * 0.08;
+    meshRef.current.rotation.x += delta * 0.03; // Further reduced
+    meshRef.current.rotation.y += delta * 0.05; // Further reduced
     
     // Safe viewport calculations with bounds checking
     const viewportWidth = Math.max(state.viewport.width, 1);
@@ -65,7 +65,7 @@ const Scene: React.FC<SceneProps> = ({ cursorPosition }) => {
 
   return (
     <group ref={meshRef}>
-      <TorusKnot args={torusKnotArgs}>
+      <TorusKnot args={[...torusKnotArgs]}> {/* Spread to create a mutable array */}
         <meshStandardMaterial 
           color="#38bdf8" 
           emissive="#22c55e"
