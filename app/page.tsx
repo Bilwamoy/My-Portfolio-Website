@@ -62,8 +62,17 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState<string>('about');
   const [isLoading, setIsLoading] = useState(true);
   const [pageLoaded, setPageLoaded] = useState(false);
+  const [renderParticles, setRenderParticles] = useState(true);
 
   useEffect(() => {
+    // Check for prefers-reduced-motion
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handleChange = () => {
+      setRenderParticles(!mediaQuery.matches);
+    };
+    handleChange(); // Initial check
+    mediaQuery.addEventListener('change', handleChange);
+
     // Ensure custom cursor class is removed to show normal cursor
     document.body.classList.remove('custom-cursor');
     
@@ -90,12 +99,14 @@ export default function Home() {
     document.addEventListener('mouseout', handleMouseOut);
 
     return () => {
+      mediaQuery.removeEventListener('change', handleChange);
       window.removeEventListener('mousemove', updateCursorPosition);
       document.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseout', handleMouseOut);
       document.body.classList.remove('custom-cursor');
     };
-  }, [isLoading]);
+  }, [isLoading]); // isLoading dependency is kept, though the media query logic is independent of it.
+                  // Consider splitting into a separate useEffect if isLoading changes frequently.
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -167,9 +178,11 @@ export default function Home() {
           </div>
 
           {/* Floating Particles Background */}
-          <ErrorBoundary fallback={<div />}>
-            <FloatingParticles mouse={cursorPosition} className="opacity-30" />
-          </ErrorBoundary>
+          {renderParticles && (
+            <ErrorBoundary fallback={<div />}>
+              <FloatingParticles mouse={cursorPosition} className="opacity-30" />
+            </ErrorBoundary>
+          )}
 
           <ErrorBoundary fallback={<div className="fixed inset-0 -z-10 bg-gradient-to-br from-slate-900 to-slate-800" />}>
             <Suspense fallback={<div className="fixed inset-0 -z-10 bg-gradient-to-br from-slate-900/20 to-slate-800/20" />}>

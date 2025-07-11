@@ -10,7 +10,7 @@ interface ParticleSystemProps {
   mouse?: { x: number; y: number };
 }
 
-const ParticleSystem: React.FC<ParticleSystemProps> = ({ count = 5000, mouse }) => {
+const ParticleSystem: React.FC<ParticleSystemProps> = ({ count = 500, mouse }) => {
   const ref = useRef<THREE.Points>(null);
   
   const [positions, colors] = useMemo(() => {
