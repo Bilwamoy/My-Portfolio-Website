@@ -1,0 +1,16 @@
+{
+  "name": "Bilwamoy Chakraborty | Creative Full-Stack Developer",
+  "short_name": "Bilwamoy Portfolio",
+  "description": "Portfolio of Bilwamoy Chakraborty, a passionate Full-Stack Developer",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#38bdf8",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
