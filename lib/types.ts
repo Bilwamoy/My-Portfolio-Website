@@ -8,10 +8,13 @@ export interface Project {
   githubUrl?: string;
 }
 
+import { ComponentType } from 'react';
+
 export interface Skill {
   name: string;
-  icon?: React.FC<React.SVGProps<SVGSVGElement>>;
+  icon?: ComponentType<any>;
 }
+
 
 export interface SkillCategory {
   title: string;
