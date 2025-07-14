@@ -58,7 +58,7 @@ export const PROJECTS: Project[] = [
   },
 ];
 
-import { ReactIcon, NextJsIcon, TailwindCssIcon, HtmlIcon, CssIcon, JavascriptIcon, TypescriptIcon, NodeJsIcon, ExpressJsIcon, MongoDBIcon, GitIcon, PostmanIcon, FigmaIcon, MysqlIcon, VercelIcon, DefaultTechIcon, MongooseIcon, AstroIcon, SvelteIcon } from '../components/icons/TechIcons';
+import { ReactIcon, NextJsIcon, TailwindCssIcon, HtmlIcon, CssIcon, JavascriptIcon, TypescriptIcon, NodeJsIcon, ExpressJsIcon, MongoDBIcon, GitIcon, PostmanIcon, FigmaIcon, MysqlIcon, VercelIcon, MongooseIcon, AstroIcon, SvelteIcon } from '../components/icons/TechIcons';
 
 export const SKILLS: SkillCategory[] = [
   {
@@ -85,7 +85,7 @@ export const SKILLS: SkillCategory[] = [
     title: "Database",
     skills: [
       { name: "MongoDB", icon: MongoDBIcon },
-      { name: "MongoDB Atlas", icon: MongoDBIcon }, // Placeholder for MongoDB Atlas
+      { name: "MongoDB Atlas", icon: MongoDBIcon },
       { name: "Mongoose", icon: MongooseIcon },
       { name: "MySQL", icon: MysqlIcon } // Added MySQL
     ]
