@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from '@iconify/react';
 
 export const ReactIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="-11.5 -10.23174 23 20.46348" fill="currentColor" {...props}>
@@ -24,17 +25,9 @@ export const NodeJsIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-export const MongoDBIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#47A248" {...props}>
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18a8 8 0 118-8 8 8 0 01-8 8z"/>
-    <path d="M12 6a6 6 0 106 6 6 6 0 00-6-6z"/>
-  </svg>
-);
-
-export const GitIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
-    <path d="M12 2a10 10 0 1010 10A10 10 0 0012 2zm0 18a8 8 0 118-8 8 8 0 01-8 8z"/>
-    <path d="M12 6a6 6 0 106 6 6 6 0 00-6-6z"/>
+export const VercelIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#000000" {...props}>
+    <path d="M24 22.525H0L12 2.475z"/>
   </svg>
 );
 
@@ -44,73 +37,24 @@ export const GitHubIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-export const HtmlIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#E44D26" {...props}>
-    <path d="M1.5 0h21l-1.91 21.563L11.997 24l-8.564-2.438L1.5 0zm17.09 4.413L5.41 4.413l.213 2.535h12.132l-.363 3.426H5.792l.213 2.535h11.546l-.7 7.019-5.006 1.389-4.99-1.389-.363-3.426H5.016l.703 7.019 6.284 1.788 6.284-1.788 1.91-21.563z"/>
-  </svg>
-);
-
-export const CssIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1572B6" {...props}>
-    <path d="M1.5 0h21l-1.91 21.563L11.997 24l-8.564-2.438L1.5 0zm17.09 4.413L5.41 4.413l.213 2.535h12.132l-.363 3.426H5.792l.213 2.535h11.546l-.7 7.019-5.006 1.389-4.99-1.389-.363-3.426H5.016l.703 7.019 6.284 1.788 6.284-1.788 1.91-21.563z"/>
-  </svg>
-);
-
-export const JavascriptIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" {...props}>
-    <rect width="128" height="128" fill="#F7DF1E"/>
-    <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="70" font-weight="bold" fill="#000000" text-anchor="middle" dominant-baseline="middle">JS</text>
-  </svg>
-);
-
-export const TypescriptIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#3178C6" {...props}>
-    <path d="M0 0h24v24H0V0z" fill="none"/>
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.5 15h-1.5v-6h1.5v6zm3-1.5h-1.5v-4.5h1.5v4.5z"/>
-  </svg>
-);
-
-export const TailwindCssIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
-    <path d="M2 3h20v18H2zm2 2v14h16V5z"/>
-    <path d="M4 5h16v14H4zM6 7h12v2H6zm0 4h12v2H6zm0 4h12v2H6z"/>
-  </svg>
-);
-
-export const ExpressJsIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#000000" {...props}>
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.5 15h-1.5v-6h1.5v6zm3-1.5h-1.5v-4.5h1.5v4.5z"/>
-  </svg>
-);
-
-export const PostmanIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FF6C37" {...props}>
-    <path d="M0 0h24v24H0V0z" fill="none"/>
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.5 15h-1.5v-6h1.5v6zm3-1.5h-1.5v-4.5h1.5v4.5z"/>
-  </svg>
-);
-
-export const FigmaIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#F24E1E" {...props}>
-    <path d="M0 0h24v24H0V0z" fill="none"/>
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.5 15h-1.5v-6h1.5v6zm3-1.5h-1.5v-4.5h1.5v4.5z"/>
-  </svg>
-);
-
 export const DefaultTechIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" {...props}>
     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.5 15h-1.5v-6h1.5v6zm3-1.5h-1.5v-4.5h1.5v4.5z"/>
   </svg>
 );
 
-export const MysqlIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#00758F" {...props}>
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.5 15h-1.5v-6h1.5v6zm3-1.5h-1.5v-4.5h1.5v4.5z"/>
-  </svg>
-);
-
-export const VercelIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#000000" {...props}>
-    <path d="M24 22.525H0L12 2.475z"/>
-  </svg>
-);
+// Iconify Icons
+export const TypescriptIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="mdi:language-typescript" {...props} />;
+export const TailwindCssIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="mdi:tailwind" {...props} />;
+export const ExpressJsIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="simple-icons:express" {...props} />;
+export const MongooseIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="simple-icons:mongoose" {...props} />;
+export const FigmaIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="mdi:figma" {...props} />;
+export const AstroIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="simple-icons:astro" {...props} />;
+export const SvelteIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="simple-icons:svelte" {...props} />;
+export const MongoDBIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="mdi:database" {...props} />;
+export const MysqlIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="mdi:database" {...props} />;
+export const PostmanIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="simple-icons:postman" {...props} />;
+export const GitIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="mdi:git" {...props} />;
+export const HtmlIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="mdi:language-html5" {...props} />;
+export const CssIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="mdi:language-css3" {...props} />;
+export const JavascriptIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => <Icon icon="mdi:language-javascript" {...props} />;

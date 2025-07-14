@@ -21,12 +21,22 @@ export async function POST(request: Request) {
     const { name, email, message } = validation.data;
 
     // 2. Save to database
-    await dbConnect();
-    await Message.create({ name, email, message });
+    console.log('Attempting to connect to DB...');
+    try {
+        await dbConnect();
+        console.log('DB connected. Attempting to save message...');
+        await Message.create({ name, email, message });
+        console.log('Message saved to DB.');
+    } catch (dbError) {
+        console.error('Database operation failed:', dbError);
+        return NextResponse.json({ message: 'Failed to save message to database.', error: (dbError as Error).message }, { status: 500 });
+    }
     
     // 3. Send email notification
+    console.log('Attempting to send email...');
     try {
         await sendContactEmail(name, email, message);
+        console.log('Email sent successfully.');
     } catch (emailError) {
         // Log the email error but don't fail the request if DB write was successful
         console.error("Email failed to send but message was saved to DB:", emailError);

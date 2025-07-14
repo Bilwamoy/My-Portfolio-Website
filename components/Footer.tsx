@@ -1,10 +1,31 @@
 'use client';
 
 import React from 'react';
+import FeedbackSection from './FeedbackSection';
+import { PERSONAL_INFO } from '@/lib/constants';
+import { motion } from 'framer-motion';
 
 const Footer: React.FC = () => {
   return (
     <footer className="max-w-md pb-16 text-sm text-slate-600 dark:text-slate-500 sm:pb-0">
+      <FeedbackSection />
+      <ul className="ml-1 mt-10 flex items-center" aria-label="Social media">
+        {PERSONAL_INFO.socials.map((social) => (
+          <li key={social.name} className="mr-5 shrink-0">
+            <motion.a
+              whileHover={{ y: -3, scale: 1.1 }}
+              href={social.url}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label={social.name}
+              className="block text-slate-400 hover:text-sky-300 transition-colors"
+            >
+              <span className="sr-only">{social.name}</span>
+              <social.icon className="h-6 w-6" />
+            </motion.a>
+          </li>
+        ))}
+      </ul>
       <p>
         Loosely designed in{' '}
         <a

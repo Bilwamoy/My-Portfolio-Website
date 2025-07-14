@@ -21,7 +21,7 @@ export const PROJECTS: Project[] = [
     tags: ["React", "Tailwind CSS", "Express.js", "MongoDB"],
     image: "/project-placeholder.png",
     liveDemoUrl: "#",
-    githubUrl: "#",
+    githubUrl: "https://github.com/joygaara/Ecommerce.git",
   },
 
   {
@@ -30,7 +30,7 @@ export const PROJECTS: Project[] = [
     tags: ["React", "Node.js", "MongoDB"],
     image: "/project-placeholder.png",
     liveDemoUrl: "#",
-    githubUrl: "#",
+    githubUrl: "https://github.com/joygaara/coffe_shop.git",
   },
   {
     title: "URL Shortener",
@@ -38,7 +38,7 @@ export const PROJECTS: Project[] = [
     tags: ["React", "Backend API"],
     image: "/project-placeholder.png",
     liveDemoUrl: "#",
-    githubUrl: "#",
+    githubUrl: "https://github.com/joygaara/URL_shortener.git",
   },
   {
     title: "Gemini Clone",
@@ -46,7 +46,7 @@ export const PROJECTS: Project[] = [
     tags: ["React", "UI/UX Design"],
     image: "/project-placeholder.png",
     liveDemoUrl: "#",
-    githubUrl: "#",
+    githubUrl: "https://github.com/joygaara/Gemini_clone.git",
   },
   {
     title: "Travel Blog Website",
@@ -54,11 +54,11 @@ export const PROJECTS: Project[] = [
     tags: ["expressjs", "tailwindcss", "react"],
     image: "/project-placeholder.png",
     liveDemoUrl: "#",
-    githubUrl: "#",
+    githubUrl: "https://github.com/joygaara/blog.git",
   },
 ];
 
-import { ReactIcon, NextJsIcon, TailwindCssIcon, HtmlIcon, CssIcon, JavascriptIcon, TypescriptIcon, NodeJsIcon, ExpressJsIcon, MongoDBIcon, GitIcon, PostmanIcon, FigmaIcon, MysqlIcon, VercelIcon, DefaultTechIcon } from '../components/icons/TechIcons';
+import { ReactIcon, NextJsIcon, TailwindCssIcon, HtmlIcon, CssIcon, JavascriptIcon, TypescriptIcon, NodeJsIcon, ExpressJsIcon, MongoDBIcon, GitIcon, PostmanIcon, FigmaIcon, MysqlIcon, VercelIcon, DefaultTechIcon, MongooseIcon, AstroIcon, SvelteIcon } from '../components/icons/TechIcons';
 
 export const SKILLS: SkillCategory[] = [
   {
@@ -85,8 +85,8 @@ export const SKILLS: SkillCategory[] = [
     title: "Database",
     skills: [
       { name: "MongoDB", icon: MongoDBIcon },
-      { name: "MongoDB Atlas", icon: DefaultTechIcon }, // Placeholder for MongoDB Atlas
-      { name: "Mongoose", icon: DefaultTechIcon }, // Placeholder for Mongoose
+      { name: "MongoDB Atlas", icon: MongoDBIcon }, // Placeholder for MongoDB Atlas
+      { name: "Mongoose", icon: MongooseIcon },
       { name: "MySQL", icon: MysqlIcon } // Added MySQL
     ]
   },
@@ -98,8 +98,8 @@ export const SKILLS: SkillCategory[] = [
       { name: "Postman", icon: PostmanIcon },
       { name: "Figma", icon: FigmaIcon },
       { name: "Vercel", icon: VercelIcon }, // Added Vercel
-      { name: "Astro (Learning)", icon: DefaultTechIcon }, // Placeholder for Astro
-      { name: "Svelte (Learning)", icon: DefaultTechIcon } // Placeholder for Svelte
+      { name: "Astro (Learning)", icon: AstroIcon },
+      { name: "Svelte (Learning)", icon: SvelteIcon }
     ]
   }
 ];

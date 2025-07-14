@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 import {
@@ -13,23 +12,17 @@ import {
 
 const ResumeSection: React.FC = () => {
   return (
-    <section id="resume" className="py-24">
-      <motion.h2
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+    <section id="resume" className="py-12 glass-effect mb-12 flex flex-col items-center justify-center">
+      <h2
         className="text-3xl font-bold tracking-tight text-slate-800 dark:text-slate-200 sm:text-4xl mb-8"
       >
         My Resume
-      </motion.h2>
+      </h2>
       <Accordion type="single" collapsible className="w-full max-w-4xl mx-auto">
         <AccordionItem value="item-1">
-          <AccordionTrigger className="text-xl font-semibold text-slate-800 dark:text-slate-200 hover:no-underline">View Resume</AccordionTrigger>
+          <AccordionTrigger className="text-xl font-semibold text-slate-800 dark:text-slate-200 hover:no-underline text-center">View Resume</AccordionTrigger>
           <AccordionContent>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+            <div
               className="mt-4 flex flex-col items-center gap-8"
             >
               <div className="w-full">
@@ -45,7 +38,7 @@ const ResumeSection: React.FC = () => {
                   Download Resume
                 </a>
               </Button>
-            </motion.div>
+            </div>
           </AccordionContent>
         </AccordionItem>
       </Accordion>

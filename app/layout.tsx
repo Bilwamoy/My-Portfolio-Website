@@ -37,7 +37,20 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={`scroll-smooth ${sora.variable} ${orbitron.variable}`}>
+    <html lang="en" className={`scroll-smooth ${sora.variable} ${orbitron.variable}`} suppressHydrationWarning={true}>
+      <head>
+        <meta name="description" content={siteConfig.description} />
+        <meta name="keywords" content="Next.js, React, Portfolio, Developer, Web Development, JavaScript, TypeScript" />
+        <meta name="author" content="Bilwamoy Chakraborty" />
+        <meta property="og:title" content={siteConfig.name} />
+        <meta property="og:description" content={siteConfig.description} />
+        <meta property="og:url" content={siteConfig.url} />
+        <meta property="og:site_name" content={siteConfig.name} />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={siteConfig.name} />
+        <meta name="twitter:description" content={siteConfig.description} />
+      </head>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {!loadingComplete && <LoadingScreen onLoadingComplete={handleLoadingComplete} />}

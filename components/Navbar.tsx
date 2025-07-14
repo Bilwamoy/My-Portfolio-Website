@@ -13,27 +13,22 @@ const navItems = [
   { id: 'contact', label: 'Contact' },
 ];
 
-const Navbar: React.FC<{ activeSection: string }> = ({ activeSection }) => {
+const Navbar: React.FC<{ activeSection: string; onSectionChange: (sectionId: string) => void }> = ({ activeSection, onSectionChange }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const scrollToSection = (id: string) => {
-    const section = document.getElementById(id);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
+  const handleNavigationClick = (id: string) => {
+    onSectionChange(id);
     setIsOpen(false);
   };
 
   return (
     <>
-      {/* Fixed Theme Toggle - Top Right */}
-      <div className="fixed top-4 right-4 z-[60]">
-        <ThemeToggle />
-      </div>
+      <nav className="flex flex-col items-end w-full">
+        <div className="mb-4">
+          <ThemeToggle />
+        </div>
 
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm md:relative md:bg-transparent md:backdrop-blur-none">
-      <div className="mx-auto max-w-screen-xl px-6 py-3 md:px-12">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-end">
           <div className="hidden md:block">
             <ul className="flex flex-col space-y-4">
               {navItems.map((item) => (
@@ -42,7 +37,7 @@ const Navbar: React.FC<{ activeSection: string }> = ({ activeSection }) => {
                     href={`#${item.id}`}
                     onClick={(e) => {
                       e.preventDefault();
-                      scrollToSection(item.id);
+                      handleNavigationClick(item.id);
                     }}
                     className={`group flex items-center py-2 transition-all ${activeSection === item.id
                         ? 'text-sky-400'
@@ -50,9 +45,9 @@ const Navbar: React.FC<{ activeSection: string }> = ({ activeSection }) => {
                       }`}
                   >
                     <motion.span
-                      className="mr-4 h-px bg-slate-600 transition-all group-hover:bg-sky-400"
-                      initial={{ width: '2rem' }}
-                      animate={{ width: activeSection === item.id ? '4rem' : '2rem', backgroundColor: activeSection === item.id ? '#38bdf8' : '#475569' }}
+                      className="mr-2 h-px bg-slate-600 transition-all group-hover:bg-sky-400"
+                      initial={{ width: '1rem' }}
+                      animate={{ width: activeSection === item.id ? '2rem' : '1rem', backgroundColor: activeSection === item.id ? '#38bdf8' : '#475569' }}
                       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                     ></motion.span>
                     <span className="text-xs font-bold uppercase tracking-widest">
@@ -76,34 +71,33 @@ const Navbar: React.FC<{ activeSection: string }> = ({ activeSection }) => {
             </button>
           </div>
         </div>
-      </div>
 
-      {isOpen && (
-        <motion.div
-          id="mobile-nav"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm"
-        >
-          <ul className="flex flex-col items-center space-y-4 py-4">
-            {navItems.map((item) => (
-              <li key={item.id}>
-                <a
-                  href={`#${item.id}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection(item.id);
-                  }}
-                  className="text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-300"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </motion.div>
-      )}
-    </nav>
+        {isOpen && (
+          <motion.div
+            id="mobile-nav"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm"
+          >
+            <ul className="flex flex-col items-center space-y-4 py-4">
+              {navItems.map((item) => (
+                <li key={item.id}>
+                  <a
+                    href={`#${item.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigationClick(item.id);
+                    }}
+                    className="text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-300"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </nav>
     </>
   );
 };

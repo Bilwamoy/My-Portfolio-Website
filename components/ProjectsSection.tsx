@@ -10,8 +10,12 @@ import type { Project } from '@/lib/types';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Globe, Github } from 'lucide-react';
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
-const ProjectCard: React.FC<{ project: Project }> = ({ project }) => (
+import { trackEvent } from '@/lib/tracking';
+
+const ProjectCard: React.FC<{ project: Project; onClick: () => void }> = ({ project, onClick }) => (
   <motion.div
     className="group relative grid gap-4 pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4"
     whileHover={{
@@ -37,13 +41,14 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => (
         alt={project.title}
         width={400}
         height={225}
-        className="rounded-lg border-2 border-slate-200/10 dark:border-slate-200/10 border-white/30 object-cover shadow-lg"
+        className="rounded-lg border-2 border-slate-200/10 dark:border-slate-200/10 border-white/30 object-cover shadow-lg cursor-pointer"
+        onClick={onClick}
       />
     </div>
     <div className="z-10 sm:col-span-5 p-4">
       <h3 className="font-medium leading-snug text-slate-800 dark:text-slate-200">
         <div className="inline-flex items-baseline font-medium leading-tight text-slate-800 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-300 focus-visible:text-sky-600 dark:focus-visible:text-sky-300 text-base transition-colors">
-          <span className="absolute -inset-x-4 -inset-y-2.5 hidden rounded md:-inset-x-6 md:-inset-y-4 lg:block"></span>
+          
           <span>{project.title}</span>
         </div>
       </h3>
@@ -94,20 +99,43 @@ const itemVariants = {
 
 
 const ProjectsSection: React.FC = () => {
+  const [filter, setFilter] = React.useState('All');
+  const [open, setOpen] = React.useState(false);
+  const [currentIndex, setCurrentIndex] = React.useState(0);
+
+  const tags = ['All', ...new Set(PROJECTS.flatMap(p => p.tags))];
+
+  const filteredProjects = filter === 'All' ? PROJECTS : PROJECTS.filter(p => p.tags.includes(filter));
+
+  const slides = filteredProjects.map(p => ({ src: p.image }));
+
   return (
     <Section id="projects" title="Projects">
+      <div className="flex flex-wrap gap-2 mb-8">
+        {tags.map(tag => (
+          <Button key={tag} variant={filter === tag ? 'default' : 'outline'} onClick={() => { setFilter(tag); trackEvent('Project Filter Click', { tag }); console.log('Filter clicked:', tag); console.log('Filtered projects:', filteredProjects); }}>
+            {tag}
+          </Button>
+        ))}
+      </div>
        <motion.ul
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
        >
-        {PROJECTS.map((project, index) => (
+        {filteredProjects.map((project, index) => (
           <motion.li key={index} className="mb-12" variants={itemVariants}>
-            <ProjectCard project={project} />
+            <ProjectCard project={project} onClick={() => { setCurrentIndex(index); setOpen(true); }} />
           </motion.li>
         ))}
       </motion.ul>
+      <Lightbox
+        open={open}
+        close={() => setOpen(false)}
+        slides={slides}
+        index={currentIndex}
+      />
     </Section>
   );
 };

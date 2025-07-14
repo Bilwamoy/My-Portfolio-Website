@@ -5,7 +5,7 @@
 @layer base {
   :root {
     /* Light theme variables */
-    --background: 0 0% 100%;
+    --background: 240 5% 96%;
     --foreground: 31 31% 12%;
     --card: 255 255 255 / 0.2;
     --card-foreground: 31 31% 12%;
@@ -129,4 +129,27 @@ html {
 .page-content.loaded {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Glass effect */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+  border-radius: 10px;
+  animation: glass-animation 10s infinite alternate;
+}
+
+@keyframes glass-animation {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.02) rotate(1deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
 }

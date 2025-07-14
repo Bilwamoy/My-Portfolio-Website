@@ -60,12 +60,14 @@ const ContactSection: React.FC = () => {
 
   return (
     <Section id="contact" title="Contact">
-        <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-200 mb-4 font-orbitron">Get In Touch</h2>
-        <p className="mb-6 max-w-lg text-lg leading-relaxed text-slate-600 dark:text-slate-300">
-            I&apos;m currently open to new opportunities and collaborations. Whether you have a question, a project proposal, or just want to say hi, my inbox is always open.
-        </p>
+        <div className="max-w-lg mx-auto text-center">
+            <h2 className="text-3xl font-bold text-slate-800 dark:text-slate-200 mb-4 font-orbitron">Get In Touch</h2>
+            <p className="mb-6 text-lg leading-relaxed text-slate-600 dark:text-slate-300">
+                I&apos;m currently open to new opportunities and collaborations. Whether you have a question, a project proposal, or just want to say hi, my inbox is always open.
+            </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="mt-8 max-w-lg">
+        <form onSubmit={handleSubmit} className="mt-8 max-w-lg mx-auto">
             <div className="space-y-6">
                 <div>
                     <label htmlFor="name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Name</label>
@@ -100,22 +102,7 @@ const ContactSection: React.FC = () => {
             </div>
         )}
       
-        <div className="mt-12 flex items-center space-x-6">
-            {PERSONAL_INFO.socials.map((social) => (
-            <motion.a
-                key={social.name}
-                href={social.url}
-                target="_blank"
-                rel="noreferrer noopener"
-                aria-label={social.name}
-                className="text-slate-400 hover:text-sky-300 transition-colors"
-                whileHover={{ y: -3, scale: 1.2 }}
-                transition={{ type: 'spring', stiffness: 300 }}
-            >
-                <social.icon className="h-8 w-8" />
-            </motion.a>
-            ))}
-        </div>
+        
     </Section>
   );
 };

@@ -6,7 +6,6 @@ const nextConfig = {
     },
     // Optimize images
     images: {
-        formats: ['image/webp', 'image/avif'],
         minimumCacheTTL: 60,
     },
     // Reduce bundle size

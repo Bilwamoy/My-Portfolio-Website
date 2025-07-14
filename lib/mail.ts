@@ -40,3 +40,31 @@ export const sendContactEmail = async (name: string, email: string, message: str
     throw new Error('Failed to send email.');
   }
 };
+
+export const sendFeedbackEmail = async (name: string, email: string, feedback: string) => {
+  if (!process.env.RESEND_API_KEY || !toEmail) {
+    console.error("Resend is not configured. Skipping feedback email.");
+    return;
+  }
+
+  try {
+    await resend.emails.send({
+      from: 'Portfolio Feedback <onboarding@resend.dev>', // Must be a verified domain on Resend for production
+      to: toEmail,
+      subject: `New Feedback from ${name} via Portfolio`,
+      reply_to: email,
+      html: `<div style="font-family: sans-serif; line-height: 1.6;">
+              <h2>New Feedback via Portfolio</h2>
+              <p>You have new feedback from your portfolio feedback form:</p>
+              <hr>
+              <p><strong>Name:</strong> ${name}</p>
+              <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+              <p><strong>Feedback:</strong></p>
+              <p style="white-space: pre-wrap; background-color: #f4f4f4; padding: 1em; border-radius: 4px;">${feedback}</p>
+             </div>`,
+    });
+  } catch (error) {
+    console.error('Failed to send feedback email:', error);
+    throw new Error('Failed to send feedback email.');
+  }
+};
