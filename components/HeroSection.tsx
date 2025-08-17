@@ -187,6 +187,21 @@ const ProfileImage = ({ className = '', size = 'w-[150px] h-[150px]' }) => {
   );
 };
 
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
 const HeroSection: React.FC = () => {
   const typingTexts = [
     "Creative Full-Stack Developer",
@@ -195,32 +210,39 @@ const HeroSection: React.FC = () => {
   ];
 
   return (
-    <div className="flex items-center gap-4">
+    <motion.div 
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="flex flex-col items-center text-center gap-6 sm:gap-8 md:flex-row md:items-center md:text-left">
       <ProfileImage 
-        size="w-[180px] h-[180px]"
+        size="w-[140px] h-[140px] md:w-[180px] md:h-[180px]"
         className="shrink-0"
       />
-      <div>
-        <h1
-          className="text-4xl font-bold tracking-tight text-slate-800 dark:text-slate-200 sm:text-5xl font-orbitron"
+      <div className="w-full max-w-2xl">
+        <motion.h1
+          variants={itemVariants}
+          className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight text-slate-800 dark:text-slate-200 font-orbitron break-words"
         >
           <a href="/">{PERSONAL_INFO.name}</a>
-        </h1>
-        <h2
-          className="mt-2 text-xl font-medium tracking-tight text-slate-700 dark:text-slate-200 sm:text-2xl"
+        </motion.h1>
+        <motion.h2
+          variants={itemVariants}
+          className="mt-2 text-lg sm:text-xl md:text-2xl font-medium tracking-tight text-slate-700 dark:text-slate-200"
         >
           <TypingAnimation texts={typingTexts} />
-        </h2>
-        <p
-          className="mt-4 max-w-xl leading-relaxed text-slate-600 dark:text-slate-300 text-base"
+        </motion.h2>
+        <motion.p
+          variants={itemVariants}
+          className="mt-4 max-w-xl md:max-w-none mx-auto md:mx-0 leading-relaxed text-slate-600 dark:text-slate-300 text-base"
         >
           I&apos;m a passionate and results-driven Frontend Developer with a knack
           for creating dynamic and user-friendly web applications. I specialize in
           React and Next.js, and I&apos;m always eager to learn new technologies
           and take on challenging projects.
-        </p>
+        </motion.p>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

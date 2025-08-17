@@ -23,7 +23,11 @@ const Navbar: React.FC<{ activeSection: string; onSectionChange: (sectionId: str
 
   return (
     <>
-      <nav className="flex flex-col items-end w-full">
+      <motion.nav 
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+        className="flex flex-col items-end w-full">
         <div className="mb-4">
           <ThemeToggle />
         </div>
@@ -97,7 +101,7 @@ const Navbar: React.FC<{ activeSection: string; onSectionChange: (sectionId: str
             </ul>
           </motion.div>
         )}
-      </nav>
+      </motion.nav>
     </>
   );
 };

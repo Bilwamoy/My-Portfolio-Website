@@ -1,13 +1,11 @@
-
-'use client';
-
 import './globals.css';
+import 'antd/dist/reset.css'; // Ant Design base styles
 import { Sora, Orbitron } from 'next/font/google';
-import { ThemeProvider } from '@/components/theme/theme-provider';
-import LoadingScreen from '@/components/LoadingScreen';
-import { useState } from 'react';
-
+import { Providers } from './providers';
 import { siteConfig } from '@/lib/site';
+
+// This metadata object will now be used by Next.js
+export { metadata } from './metadata';
 
 const sora = Sora({
   subsets: ['latin'],
@@ -21,44 +19,19 @@ const orbitron = Orbitron({
   variable: '--font-orbitron',
 });
 
-
+import LenisProvider from '@/components/LenisProvider';
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
-}) {
-  const [loadingComplete, setLoadingComplete] = useState(false);
-  console.log('Layout: loadingComplete state is', loadingComplete);
-
-  const handleLoadingComplete = () => {
-    console.log('Layout: handleLoadingComplete called.');
-    setLoadingComplete(true);
-  };
-
-  return (
-    <html lang="en" className={`scroll-smooth ${sora.variable} ${orbitron.variable}`} suppressHydrationWarning={true}>
-      <head>
-        <meta name="description" content={siteConfig.description} />
-        <meta name="keywords" content="Next.js, React, Portfolio, Developer, Web Development, JavaScript, TypeScript" />
-        <meta name="author" content="Bilwamoy Chakraborty" />
-        <meta property="og:title" content={siteConfig.name} />
-        <meta property="og:description" content={siteConfig.description} />
-        <meta property="og:url" content={siteConfig.url} />
-        <meta property="og:site_name" content={siteConfig.name} />
-        <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={siteConfig.name} />
-        <meta name="twitter:description" content={siteConfig.description} />
-      </head>
+}) {  return (
+    <html lang="en" className={`scroll-smooth ${sora.variable} ${orbitron.variable}`} suppressHydrationWarning>
       <body>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {!loadingComplete && <LoadingScreen onLoadingComplete={handleLoadingComplete} />}
-          <div className={`page-content ${loadingComplete ? 'loaded' : ''}`}>
-            {children}
-          </div>
-        </ThemeProvider>
-      <script
+        <Providers>
+          <LenisProvider>{children}</LenisProvider>
+        </Providers>
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({

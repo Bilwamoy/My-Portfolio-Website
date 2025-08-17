@@ -15,6 +15,7 @@ import { PerformanceMonitor, throttle } from '@/lib/performance';
 
 const BlogSection = lazy(() => import('@/components/BlogSection'));
 const TestimonialsSection = lazy(() => import('@/components/TestimonialsSection'));
+const Enhancements = lazy(() => import('../components/Enhancements'));
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component<
@@ -64,6 +65,8 @@ export default function Home() {
   const [contentKey, setContentKey] = useState(0); // Key to force re-render and animation
   const [isAnimating, setIsAnimating] = useState(false); // State to control animation
 
+  const [isClicked, setIsClicked] = useState(false);
+
   const handleSectionChange = useCallback((sectionId: string) => {
     setIsAnimating(true);
     setTimeout(() => {
@@ -100,14 +103,26 @@ export default function Home() {
         setIsHovering(false);
       }
     };
+
+    const handleMouseDown = () => {
+      setIsClicked(true);
+    };
+
+    const handleMouseUp = () => {
+      setIsClicked(false);
+    };
     
     window.addEventListener('mousemove', updateCursorPosition);
     document.addEventListener('mouseover', handleMouseOver);
     document.addEventListener('mouseout', handleMouseOut);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
 
     return () => {
       window.removeEventListener('mousemove', updateCursorPosition);
       document.removeEventListener('mouseout', handleMouseOut);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
       document.body.classList.remove('custom-cursor');
     };
   }, []);
@@ -176,10 +191,15 @@ export default function Home() {
         <>
             <motion.div
               className="fixed z-[60] h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-sky-400 pointer-events-none transition-transform duration-150 ease-in-out hidden md:block"
+              style={{ 
+                backdropFilter: 'blur(5px)',
+                WebkitBackdropFilter: 'blur(5px)',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              }}
               animate={{
                 left: cursorPosition.x,
                 top: cursorPosition.y,
-                scale: isHovering ? 1.5 : 1,
+                scale: isClicked ? 2 : (isHovering ? 1.5 : 1),
                 opacity: isHovering ? 0.5 : 1,
               }}
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
@@ -217,13 +237,29 @@ export default function Home() {
               >
                 <Suspense fallback={<div>Loading...</div>}>
                   <>
-                    <AboutSection />
-                    <ProjectsSection />
-                    <SkillsSection />
-                    <ResumeSection />
-                    <BlogSection />
-                    <TestimonialsSection />
-                    <ContactSection />
+                    {/* Enhancements component mounts global smooth scroll and back-to-top */}
+                    <Enhancements />
+                    <section data-animate='fade-up'>
+                      <AboutSection />
+                    </section>
+                    <section data-animate='fade-up'>
+                      <ProjectsSection />
+                    </section>
+                    <section data-animate='fade-up'>
+                      <SkillsSection />
+                    </section>
+                    <section data-animate='fade-up'>
+                      <ResumeSection />
+                    </section>
+                    <section data-animate='fade-up'>
+                      <BlogSection />
+                    </section>
+                    <section data-animate='fade-up'>
+                      <TestimonialsSection />
+                    </section>
+                    <section data-animate='fade-up'>
+                      <ContactSection />
+                    </section>
                     <Footer />
                   </>
                 </Suspense>

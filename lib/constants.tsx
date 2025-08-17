@@ -40,18 +40,18 @@ export const PROJECTS: Project[] = [
     description:
       "Developed a fully functional e-commerce website with animated UI using React and Tailwind CSS. Features include product listing, cart management, and user authentication.",
     tags: ["React", "Tailwind CSS", "Express.js", "MongoDB"],
-    image: "/project-placeholder.png",
-    liveDemoUrl: "#",
-    githubUrl: "https://github.com/joygaara/Ecommerce.git",
+    image: "/NEXORA.png",
+    liveDemoUrl: "https://nexora-pi-eosin.vercel.app/",
+    githubUrl: "https://github.com/Bilwamoy/E-commerce-Nexora.git",
   },
   {
     title: "Coffee Shop Web Application",
     description:
       "Created a fully functional online coffee shop (except real payment integration). Features include product listing, cart, checkout, and user login system.",
     tags: ["React", "Node.js", "MongoDB"],
-    image: "/project-placeholder.png",
-    liveDemoUrl: "#",
-    githubUrl: "https://github.com/joygaara/coffe_shop.git",
+    image: "/BREW & BLISS.png",
+    liveDemoUrl: "https://brewbliss-flax.vercel.app/",
+    githubUrl: "https://github.com/Bilwamoy/Coffee-shop-BrewBliss.git",
   },
   {
     title: "URL Shortener",

@@ -63,23 +63,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    overflow-x: hidden; /* Prevent horizontal scrollbar */
   }
-  
-  html {
-    overflow-x: hidden; /* Prevent horizontal scrollbar */
-  }
-}
-
-/* Hide scrollbar completely for a cleaner look */
-::-webkit-scrollbar {
-  width: 0px;
-  background: transparent;
-}
-
-/* For Firefox */
-html {
-  scrollbar-width: none;
 }
 
 /* Custom cursor styles disabled - normal cursor will always be visible */
