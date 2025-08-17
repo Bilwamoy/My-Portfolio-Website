@@ -1,367 +1,251 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 
+// Interface for component props, keeping it for good practice.
 interface LoadingScreenProps {
   onLoadingComplete: () => void;
   minLoadingTime?: number;
-  loadingTasks?: (() => Promise<void>)[];
 }
 
-const LoadingScreen: React.FC<LoadingScreenProps> = ({ 
-  onLoadingComplete, 
-  minLoadingTime = 5000,
-  loadingTasks = []
+// --- Helper Component: Digital Rain Background ---
+// This component creates a "Matrix-style" background using HTML Canvas for better performance.
+const DigitalRain: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const setupCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    
+    setupCanvas();
+
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const fontSize = 16;
+    const columns = Math.floor(canvas.width / fontSize);
+    const drops = Array.from({ length: columns }).fill(1).map(() => Math.floor(Math.random() * canvas.height));
+
+    const draw = () => {
+      // Create a semi-transparent black rectangle to create the fading trail effect
+      ctx.fillStyle = 'rgba(10, 10, 25, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Set color and font for the falling characters
+      ctx.fillStyle = '#00f0c0'; // A vibrant cyan color
+      ctx.font = `${fontSize}px monospace`;
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        // Reset drop to the top randomly to make the rain effect uneven and continuous
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    };
+
+    let lastTimestamp = 0;
+    const fps = 24; // Throttle to 24 FPS
+    const frameInterval = 1000 / fps;
+
+    const animate = (timestamp: number) => {
+      animationFrameId = window.requestAnimationFrame(animate);
+      const elapsed = timestamp - lastTimestamp;
+
+      if (elapsed > frameInterval) {
+        lastTimestamp = timestamp - (elapsed % frameInterval);
+        draw();
+      }
+    };
+
+    animationFrameId = window.requestAnimationFrame(animate);
+    
+    const debounce = (func: () => void, delay: number) => {
+      let timeoutId: NodeJS.Timeout;
+      return () => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(func, delay);
+      };
+    };
+
+    const debouncedSetupCanvas = debounce(setupCanvas, 300);
+    window.addEventListener('resize', debouncedSetupCanvas);
+
+    // Cleanup function to cancel animation frame and remove event listener
+    return () => {
+      window.cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', debouncedSetupCanvas);
+    };
+  }, [setupCanvas]);
+
+  return <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full z-0" />;
+};
+
+
+// --- Helper Component: Humanoid Robot SVG ---
+// A more detailed and sleek robot design using SVG. Animations are done with CSS.
+const HumanoidRobot: React.FC = () => {
+  return (
+    <div className="relative w-48 h-64">
+        {/* Using a standard style tag to avoid styled-jsx issues */}
+        <style>{`
+            @keyframes pulse-glow {
+                0%, 100% { opacity: 0.7; }
+                50% { opacity: 1; }
+            }
+            .eye-scan {
+                animation: scan 4s linear infinite;
+            }
+            @keyframes scan {
+                0%, 100% { transform: translateX(-6px); }
+                50% { transform: translateX(6px); }
+            }
+            @keyframes float {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+            }
+            .robot-body {
+                animation: float 6s ease-in-out infinite;
+            }
+        `}</style>
+      <svg viewBox="0 0 150 200" className="w-full h-full robot-body">
+        <defs>
+          <filter id="robot-glow-filter">
+            <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
+            <feMerge>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        {/* Head */}
+        <path d="M50 40 C 50 15, 100 15, 100 40 L 110 70 L 40 70 Z" fill="#B0B0C0" />
+        <path d="M45 70 L 105 70 L 100 85 L 50 85 Z" fill="#808090" />
+        
+        {/* Faceplate / Visor */}
+        <g filter="url(#robot-glow-filter)">
+          <rect x="50" y="45" width="50" height="20" rx="5" fill="#101020" stroke="#00f0c0" strokeWidth="1" />
+          <rect x="67" y="52" width="16" height="6" fill="#00f0c0" className="eye-scan" />
+        </g>
+
+        {/* Torso */}
+        <path d="M40 90 L 110 90 L 95 150 L 55 150 Z" fill="#B0B0C0" />
+        <path d="M60 95 L 90 95 L 85 140 L 65 140 Z" fill="#101020" stroke="#00f0c0" strokeWidth="1" />
+
+        {/* Core Light */}
+        <circle cx="75" cy="115" r="8" fill="#00f0c0" style={{ animation: 'pulse-glow 2s infinite' }} filter="url(#robot-glow-filter)" />
+
+        {/* Shoulders */}
+        <circle cx="40" cy="95" r="10" fill="#808090" />
+        <circle cx="110" cy="95" r="10" fill="#808090" />
+
+        {/* Arms */}
+        <rect x="30" y="100" width="10" height="50" rx="5" fill="#B0B0C0" />
+        <rect x="110" y="100" width="10" height="50" rx="5" fill="#B0B0C0" />
+      </svg>
+    </div>
+  );
+};
+
+
+// --- Main Loading Screen Component ---
+const LoadingScreen: React.FC<LoadingScreenProps> = ({
+  onLoadingComplete,
+  minLoadingTime = 4000, // A slightly shorter time feels snappier
 }) => {
-  const [mounted, setMounted] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [message, setMessage] = useState("Booting up consciousness...");
   const [fadeOut, setFadeOut] = useState(false);
-  const [loadingProgress, setLoadingProgress] = useState(0);
-  const [currentMessage, setCurrentMessage] = useState("Initializing portfolio...");
-  
-  // Use refs to prevent stale closures
-  const progressRef = useRef(0);
-  const messageIndexRef = useRef(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  
-  // Memoize the callback to prevent unnecessary re-renders
-  const handleLoadingComplete = useCallback(() => {
-    onLoadingComplete();
+  const startTimeRef = useRef(Date.now());
+
+  // Memoize the completion handler to prevent re-creation on re-renders.
+  const handleComplete = useCallback(() => {
+    setFadeOut(true);
+    // Wait for the fade-out animation to finish before calling onLoadingComplete
+    setTimeout(() => {
+      // FIX: Add a check to ensure onLoadingComplete is a function before calling it.
+      if (typeof onLoadingComplete === 'function') {
+        onLoadingComplete();
+      }
+    }, 500);
   }, [onLoadingComplete]);
 
   useEffect(() => {
-    if (!mounted) {
-      setMounted(true);
-      return;
-    }
-
     const messages = [
-      "Initializing portfolio...",
-      "Loading assets...",
-      "Preparing content...",
-      "Almost ready!"
+      "Booting up consciousness...",
+      "Compiling neural networks...",
+      "Calibrating sensory input...",
+      "Finalizing initialization sequence...",
     ];
 
-    const updateProgress = () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+    const progressInterval = setInterval(() => {
+      const elapsedTime = Date.now() - startTimeRef.current;
+      const currentProgress = Math.min(Math.floor((elapsedTime / minLoadingTime) * 100), 100);
+
+      setProgress(currentProgress);
+
+      if (currentProgress >= 75) {
+        setMessage(messages[3]);
+      } else if (currentProgress >= 50) {
+        setMessage(messages[2]);
+      } else if (currentProgress >= 25) {
+        setMessage(messages[1]);
       }
 
-      intervalRef.current = setInterval(() => {
-        progressRef.current += 2;
-        setLoadingProgress(progressRef.current);
-
-        // Update message every 25% progress
-        if (progressRef.current >= 25 && messageIndexRef.current === 0) {
-          setCurrentMessage(messages[1]);
-          messageIndexRef.current = 1;
-        } else if (progressRef.current >= 50 && messageIndexRef.current === 1) {
-          setCurrentMessage(messages[2]);
-          messageIndexRef.current = 2;
-        } else if (progressRef.current >= 75 && messageIndexRef.current === 2) {
-          setCurrentMessage(messages[3]);
-          messageIndexRef.current = 3;
-        }
-
-        if (progressRef.current >= 100) {
-          if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-          }
-          
-          // Start fade out
-          setTimeout(() => {
-            setFadeOut(true);
-            setTimeout(() => {
-              handleLoadingComplete();
-            }, 500);
-          }, 500);
-        }
-      }, minLoadingTime / 50);
-    };
-
-    // Execute loading tasks if provided
-    const handleLoading = async () => {
-      if (loadingTasks.length > 0) {
-        for (let i = 0; i < loadingTasks.length; i++) {
-          try {
-            await loadingTasks[i]();
-          } catch (error) {
-            console.error('Loading task failed:', error);
-          }
-        }
+      if (currentProgress >= 100) {
+        clearInterval(progressInterval);
+        handleComplete();
       }
-      updateProgress();
-    };
+    }, 100); // Update progress every 100ms
 
-    handleLoading();
-
-    // Cleanup function
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+      clearInterval(progressInterval);
     };
-  }, [mounted, minLoadingTime, loadingTasks, handleLoadingComplete]);
-
-  // Reset refs when component unmounts
-  useEffect(() => {
-    return () => {
-      progressRef.current = 0;
-      messageIndexRef.current = 0;
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, []);
-
-  if (!mounted) {
-    return (
-      <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <div className="text-blue-400 font-mono text-lg">Loading...</div>
-      </div>
-    );
-  }
+  }, [minLoadingTime, handleComplete]);
 
   return (
-    <div className={`fixed inset-0 overflow-hidden transition-opacity duration-500 ${fadeOut ? 'opacity-0' : 'opacity-100'}`}>
-      <style jsx>{`
-        @keyframes wave {
-          0%, 100% { transform: rotate(0deg); }
-          25% { transform: rotate(20deg); }
-          50% { transform: rotate(-10deg); }
-          75% { transform: rotate(15deg); }
-        }
+    <div
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0a0a19] transition-opacity duration-500 ${
+        fadeOut ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
+      <DigitalRain />
+      
+      {/* Main Content Container */}
+      <div className="relative z-10 flex flex-col items-center justify-center text-center p-4">
+        
+        <HumanoidRobot />
 
-        @keyframes bounce {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
-        }
+        <div className="w-full max-w-sm mt-8">
+            {/* Loading Message */}
+            <p className="text-cyan-300 font-mono text-lg mb-4 h-6">
+                {message}
+            </p>
 
-        @keyframes glow {
-          0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
-          50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
-        }
-
-        @keyframes smile {
-          0%, 100% { transform: scaleX(1); }
-          50% { transform: scaleX(1.2); }
-        }
-
-        @keyframes blink {
-          0%, 90%, 100% { transform: scaleY(1); }
-          95% { transform: scaleY(0.1); }
-        }
-
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-15px) rotate(5deg); }
-        }
-
-        @keyframes pulse {
-          0%, 100% { opacity: 0.6; }
-          50% { opacity: 1; }
-        }
-
-        @keyframes progressFill {
-          0% { width: 0%; }
-          100% { width: 100%; }
-        }
-
-        .robot-container {
-          animation: bounce 2s ease-in-out infinite;
-        }
-
-        .robot-head {
-          animation: float 3s ease-in-out infinite;
-        }
-
-        .robot-body {
-          animation: glow 2s ease-in-out infinite;
-        }
-
-        .wave-hand {
-          animation: wave 1.5s ease-in-out infinite;
-          transform-origin: bottom center;
-        }
-
-        .robot-eye {
-          animation: blink 4s infinite;
-        }
-
-        .robot-smile {
-          animation: smile 2s ease-in-out infinite;
-        }
-
-        .floating-particle {
-          animation: float 4s ease-in-out infinite;
-        }
-
-        .pulse-text {
-          animation: pulse 2s ease-in-out infinite;
-        }
-
-        .progress-bar {
-          background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
-          background-size: 200% 100%;
-          animation: progressFill 5s ease-in-out;
-        }
-
-        .glass-panel {
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-      `}</style>
-
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900">
-        {/* Animated Grid */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `
-              radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
-              radial-gradient(circle at 40% 60%, rgba(6, 182, 212, 0.3) 0%, transparent 50%)
-            `
-          }}></div>
-        </div>
-
-        {/* Floating Particles */}
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-blue-400 rounded-full floating-particle"
-            style={{
-              top: `${20 + Math.random() * 60}%`,
-              left: `${10 + Math.random() * 80}%`,
-              animationDelay: `${i * 0.8}s`,
-              boxShadow: '0 0 10px rgba(59, 130, 246, 0.6)'
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4">
-        {/* Robot Avatar */}
-        <div className="robot-container mb-8">
-          <div className="relative">
-            {/* Robot Head */}
-            <div className="robot-head relative">
-              <div className="w-24 h-28 bg-gradient-to-b from-gray-200 to-gray-400 rounded-full mx-auto border-2 border-gray-300 robot-body relative">
-                {/* Face Screen */}
-                <div className="absolute inset-3 bg-gradient-to-b from-slate-800 to-slate-900 rounded-full border border-blue-400">
-                  {/* Eyes */}
-                  <div className="absolute top-6 left-1/2 transform -translate-x-1/2 flex space-x-4">
-                    <div className="w-3 h-3 bg-blue-400 rounded-full robot-eye" style={{boxShadow: '0 0 10px #3b82f6'}}></div>
-                    <div className="w-3 h-3 bg-blue-400 rounded-full robot-eye" style={{boxShadow: '0 0 10px #3b82f6'}}></div>
-                  </div>
-                  {/* Smile */}
-                  <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2">
-                    <div className="w-8 h-4 border-2 border-blue-400 rounded-b-full robot-smile" style={{boxShadow: '0 0 6px #3b82f6'}}></div>
-                  </div>
-                </div>
-                
-                {/* Antenna */}
-                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-1 h-4 bg-gray-400 rounded-full">
-                  <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-red-400 rounded-full" style={{boxShadow: '0 0 8px #ef4444'}}></div>
-                </div>
-              </div>
+            {/* Progress Bar */}
+            <div className="w-full bg-gray-800/50 rounded-full h-2.5 backdrop-blur-sm border border-cyan-500/20">
+                <div
+                    className="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full rounded-full transition-width duration-150 ease-linear"
+                    style={{ width: `${progress}%` }}
+                ></div>
             </div>
-
-            {/* Robot Body */}
-            <div className="w-20 h-24 bg-gradient-to-b from-gray-300 to-gray-500 rounded-lg mx-auto mt-2 border-2 border-gray-400 robot-body relative">
-              {/* Chest Panel */}
-              <div className="absolute top-3 left-1/2 transform -translate-x-1/2 w-12 h-16 bg-gradient-to-b from-slate-700 to-slate-800 rounded border border-blue-400">
-                {/* Status Light */}
-                <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-green-400 rounded-full" style={{boxShadow: '0 0 8px #22c55e'}}></div>
-                {/* Control Buttons */}
-                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                  <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
-                  <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
-                  <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Left Arm (Waving) */}
-            <div className="absolute top-16 -left-10 wave-hand">
-              <div className="w-5 h-14 bg-gradient-to-b from-gray-300 to-gray-500 rounded-full border border-gray-400 relative">
-                {/* Hand */}
-                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gray-400 rounded-full border border-gray-500"></div>
-                {/* Shoulder Joint */}
-                <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gray-600 rounded-full border border-blue-400"></div>
-              </div>
-            </div>
-
-            {/* Right Arm */}
-            <div className="absolute top-16 -right-10">
-              <div className="w-5 h-14 bg-gradient-to-b from-gray-300 to-gray-500 rounded-full border border-gray-400 relative">
-                {/* Hand */}
-                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gray-400 rounded-full border border-gray-500"></div>
-                {/* Shoulder Joint */}
-                <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gray-600 rounded-full border border-blue-400"></div>
-              </div>
-            </div>
-
-            {/* Left Leg */}
-            <div className="absolute top-40 -left-3">
-              <div className="w-4 h-16 bg-gradient-to-b from-gray-300 to-gray-500 rounded-full border border-gray-400 relative">
-                {/* Foot */}
-                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-3 bg-gray-500 rounded border border-gray-400"></div>
-                {/* Hip Joint */}
-                <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gray-600 rounded-full border border-blue-400"></div>
-              </div>
-            </div>
-
-            {/* Right Leg */}
-            <div className="absolute top-40 -right-3">
-              <div className="w-4 h-16 bg-gradient-to-b from-gray-300 to-gray-500 rounded-full border border-gray-400 relative">
-                {/* Foot */}
-                <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-3 bg-gray-500 rounded border border-gray-400"></div>
-                {/* Hip Joint */}
-                <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gray-600 rounded-full border border-blue-400"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Loading Message */}
-        <div className="glass-panel rounded-lg p-6 mb-8 max-w-md mx-auto text-center">
-          <h2 className="text-2xl font-bold text-white mb-2">Hello! 👋</h2>
-          <p className="text-blue-200 pulse-text text-lg mb-4">
-            We are initializing the portfolio website
-          </p>
-          <p className="text-slate-300 text-sm">
-            Please wait while we prepare everything for you...
-          </p>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="w-full max-w-md mx-auto">
-          <div className="bg-slate-800 rounded-full h-2 mb-4 overflow-hidden">
-            <div 
-              className="progress-bar h-full rounded-full transition-all duration-100"
-              style={{ width: `${loadingProgress}%` }}
-            ></div>
-          </div>
-          <div className="flex justify-between text-sm text-slate-400">
-            <span>{currentMessage}</span>
-            <span>{loadingProgress}%</span>
-          </div>
-        </div>
-
-        {/* Loading Dots */}
-        <div className="flex space-x-2 mt-6">
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className="w-2 h-2 bg-blue-400 rounded-full pulse-text"
-              style={{
-                animationDelay: `${i * 0.2}s`,
-                boxShadow: '0 0 6px rgba(59, 130, 246, 0.6)'
-              }}
-            />
-          ))}
+            
+            {/* Progress Percentage */}
+            <p className="text-emerald-400 font-mono text-sm mt-2">
+                {progress}%
+            </p>
         </div>
       </div>
     </div>
