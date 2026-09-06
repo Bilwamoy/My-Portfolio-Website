@@ -128,12 +128,13 @@ export default function Home() {
 
     return () => {
       window.removeEventListener('mousemove', updateCursorPosition);
+      document.removeEventListener('mouseover', handleMouseOver);
       document.removeEventListener('mouseout', handleMouseOut);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
       document.body.classList.remove('custom-cursor');
     };
-  }, []);
+  }, [cursorX, cursorY]);
 
   
 

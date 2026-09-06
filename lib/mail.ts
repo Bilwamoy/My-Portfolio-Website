@@ -1,22 +1,15 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const toEmail = process.env.RESEND_TO_EMAIL;
-
-if (!process.env.RESEND_API_KEY) {
-  console.warn("RESEND_API_KEY is not set. Emails will not be sent in production.");
-}
-if (!toEmail) {
-  console.warn("RESEND_TO_EMAIL is not set. Emails will not be sent in production.");
-}
-
 export const sendContactEmail = async (name: string, email: string, message: string) => {
-  if (!process.env.RESEND_API_KEY || !toEmail) {
-    console.error("Resend is not configured. Skipping email.");
-    // This allows the app to function for dev without email sending.
-    // In production, this should ideally be configured.
+  const apiKey = process.env.RESEND_API_KEY;
+  const toEmail = process.env.RESEND_TO_EMAIL;
+
+  if (!apiKey || !toEmail) {
+    console.warn("Resend is not configured. Skipping contact email.");
     return;
   }
+
+  const resend = new Resend(apiKey);
 
   try {
     await resend.emails.send({
@@ -42,10 +35,15 @@ export const sendContactEmail = async (name: string, email: string, message: str
 };
 
 export const sendFeedbackEmail = async (name: string, email: string, feedback: string) => {
-  if (!process.env.RESEND_API_KEY || !toEmail) {
-    console.error("Resend is not configured. Skipping feedback email.");
+  const apiKey = process.env.RESEND_API_KEY;
+  const toEmail = process.env.RESEND_TO_EMAIL;
+
+  if (!apiKey || !toEmail) {
+    console.warn("Resend is not configured. Skipping feedback email.");
     return;
   }
+
+  const resend = new Resend(apiKey);
 
   try {
     await resend.emails.send({

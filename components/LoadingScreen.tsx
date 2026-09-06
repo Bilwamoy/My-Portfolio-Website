@@ -208,7 +208,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
               SYSTEM ACTIVE
             </span>
             <span>BILWAMOY CHAKRABORTY</span>
-            <span>PORTFOLIO '26</span>
+            <span>PORTFOLIO &apos;26</span>
           </div>
 
           {/* Center Interactive Core */}
