@@ -36,49 +36,49 @@ export const PERSONAL_INFO = {
 
 export const PROJECTS: Project[] = [
   {
-    title: "Animated E-commerce Website",
+    title: "CollabMind — AI Collaborative Workspace",
     description:
-      "Developed a fully functional e-commerce website with animated UI using React and Tailwind CSS. Features include product listing, cart management, and user authentication.",
-    tags: ["React", "Tailwind CSS", "Express.js", "MongoDB"],
-    image: "/NEXORA.png",
-    liveDemoUrl: "https://nexora-pi-eosin.vercel.app/",
-    githubUrl: "https://github.com/Bilwamoy/E-commerce-Nexora.git",
+      "Hackathon project for RAG-integrated chat with document grounding, interactive Knowledge Graph visualizations, digital whiteboard, and custom Claymorphism UI system with fluid transitions. (Role: Frontend Developer)",
+    tags: ["Next.js 16", "React 19", "Tailwind CSS v4", "Framer Motion", "RAG / AI"],
+    image: "/project-placeholder.png",
+    liveDemoUrl: "#",
+    githubUrl: "#",
   },
   {
-    title: "Coffee Shop Web Application",
+    title: "Voicer — Zero-Shot Voice Conversion for Indic Dialects",
     description:
-      "Created a fully functional online coffee shop (except real payment integration). Features include product listing, cart, checkout, and user login system.",
-    tags: ["React", "Node.js", "MongoDB"],
+      "Built a zero-shot voice conversion system for low-resource spoken dialects (e.g. Bhojpuri) using a cappella folk singing reference audio. Pipeline: Demucs → HuBERT → pitch normalization → Resemblyzer speaker embeddings → FreeVC → HiFi-GAN waveform generation (MOS 3.92).",
+    tags: ["Python", "PyTorch", "Audio AI", "HiFi-GAN", "Speech Processing"],
+    image: "/project-placeholder.png",
+    liveDemoUrl: "#",
+    githubUrl: "#",
+  },
+  {
+    title: "Brew & Bliss — E-Commerce Platform",
+    description:
+      "Developed a coffee shop e-commerce platform built with Next.js, Firebase, and Tailwind CSS featuring user authentication, product catalog, cart flow, and responsive UI.",
+    tags: ["Next.js", "Firebase", "Tailwind CSS", "React"],
     image: "/BREW & BLISS.png",
     liveDemoUrl: "https://brewbliss-flax.vercel.app/",
     githubUrl: "https://github.com/Bilwamoy/Coffee-shop-BrewBliss.git",
   },
   {
-    title: "URL Shortener",
+    title: "Nexora — E-Commerce Web Application",
     description:
-      "A React-based web app to shorten URLs using backend APIs. Includes features like redirection, copy to clipboard, and user history.",
-    tags: ["React", "Backend API"],
-    image: "/project-placeholder.png",
-    liveDemoUrl: "#",
-    githubUrl: "https://github.com/joygaara/URL_shortener.git",
+      "Built a scalable e-commerce application with React.js, Next.js, MongoDB, and Tailwind CSS featuring product listings, user management, and cart workflows.",
+    tags: ["React.js", "Next.js", "MongoDB", "Tailwind CSS"],
+    image: "/NEXORA.png",
+    liveDemoUrl: "https://nexora-pi-eosin.vercel.app/",
+    githubUrl: "https://github.com/Bilwamoy/E-commerce-Nexora.git",
   },
   {
-    title: "Gemini Clone",
+    title: "Visionary Nest — AI Portfolio & Resume Generator",
     description:
-      "Designed a Gemini-inspired AI chatbot UI using React with clean UX and dummy AI flow, focusing on a modern and responsive user interface.",
-    tags: ["React", "UI/UX Design"],
+      "Hackathon project for AI-generated portfolios and resumes with AI-driven explanations and customized layout generation. (Role: Frontend Developer)",
+    tags: ["Next.js", "AI Concepts", "Tailwind CSS", "TypeScript"],
     image: "/project-placeholder.png",
     liveDemoUrl: "#",
-    githubUrl: "https://github.com/joygaara/Gemini_clone.git",
-  },
-  {
-    title: "Travel Blog Website",
-    description:
-      "A personal travel blog website built with Next.js and Tailwind CSS, featuring dynamic content, responsive design, and a clean user interface.",
-    tags: ["expressjs", "tailwindcss", "react"],
-    image: "/project-placeholder.png",
-    liveDemoUrl: "#",
-    githubUrl: "https://github.com/joygaara/blog.git",
+    githubUrl: "#",
   },
 ];
 
@@ -99,11 +99,13 @@ export const SKILLS: SkillCategory[] = [
     ],
   },
   {
-    title: "Backend",
+    title: "Backend & ML",
     skills: [
       { name: "Node.js", icon: NodeJsIcon as IconType },
       { name: "Express.js", icon: ExpressJsIcon as IconType },
       { name: "Next.js", icon: NextJsIcon as IconType },
+      { name: "Python / Machine Learning", icon: JavascriptIcon as IconType },
+      { name: "Java", icon: JavascriptIcon as IconType },
     ],
   },
   {
@@ -116,29 +118,30 @@ export const SKILLS: SkillCategory[] = [
     ],
   },
   {
-    title: "Tools & Others",
+    title: "Tools & Core",
     skills: [
       { name: "Git", icon: GitIcon as IconType },
       { name: "GitHub", icon: GitHubIcon as IconType },
       { name: "Postman", icon: PostmanIcon as IconType },
       { name: "Figma", icon: FigmaIcon as IconType },
       { name: "Vercel", icon: VercelIcon as IconType },
-      { name: "Astro (Learning)", icon: AstroIcon as IconType },
-      { name: "Svelte (Learning)", icon: SvelteIcon as IconType },
+      { name: "DSA & OOP", icon: GitIcon as IconType },
     ],
   },
 ];
 
 export const EDUCATION = [
   {
-    degree: "B.Tech in Computer Science Engineering",
+    degree: "B.Tech in Computer Science and Engineering",
     institution: "Brainware University, Barasat",
-    period: "2022 - 2026",
   },
   {
-    degree: "Higher Secondary (12th)",
-    institution: "Ichapur Northland Boys High School",
-    period: "2021-2023",
+    degree: "Higher Secondary (Class 12)",
+    institution: "Ichapur Northland High School",
+  },
+  {
+    degree: "Secondary (Class 10)",
+    institution: "Ramakrishna Vivekananda Mission, Barrackpore",
   },
 ];
 

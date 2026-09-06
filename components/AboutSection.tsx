@@ -11,14 +11,15 @@ const AboutSection: React.FC = () => {
         {PERSONAL_INFO.objective}
       </p>
       <div className="mt-12">
-        <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-6">Education</h3>
-        {EDUCATION.map((edu, index) => (
-          <div key={index} className="mb-6">
-            <p className="text-xl font-semibold text-sky-600 dark:text-sky-400">{edu.degree}</p>
-            <p className="text-lg text-slate-700 dark:text-slate-300">{edu.institution}</p>
-            <p className="text-base text-slate-600 dark:text-slate-400">{edu.period}</p>
-          </div>
-        ))}
+        <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-200 mb-6 font-syne">Education</h3>
+        <div className="space-y-4">
+          {EDUCATION.map((edu, index) => (
+            <div key={index} className="p-5 rounded-2xl bg-white/40 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-xl shadow-md">
+              <p className="text-lg font-bold text-sky-600 dark:text-sky-400 font-syne">{edu.degree}</p>
+              <p className="text-base font-medium text-slate-700 dark:text-slate-300 mt-1">{edu.institution}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </Section>
   );

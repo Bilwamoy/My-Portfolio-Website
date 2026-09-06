@@ -1,80 +1,87 @@
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Section from './Section';
 import { PROJECTS } from '@/lib/constants';
-import { ArrowUpRightIcon } from '@/components/icons/UtilityIcons';
 import type { Project } from '@/lib/types';
 
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Globe, Github } from 'lucide-react';
-import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
-
+import { Globe, Github, Maximize2 } from 'lucide-react';
+import ProjectDrawer from './ProjectDrawer';
 import { trackEvent } from '@/lib/tracking';
+
+const FILTER_TAGS = [
+  'All',
+  'React / Next.js',
+  'AI & Audio ML',
+  'Tailwind & Motion',
+  'Full-Stack & DB',
+];
 
 const ProjectCard: React.FC<{ project: Project; onClick: () => void }> = ({ project, onClick }) => (
   <motion.div
-    className="group relative grid gap-4 pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4"
-    whileHover={{
-      y: -4,
-      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-    }}
-    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+    layout
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, scale: 0.95 }}
+    transition={{ duration: 0.3 }}
+    className="group relative grid gap-4 pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 cursor-pointer"
+    onClick={onClick}
+    whileHover={{ y: -4 }}
   >
-    {/* Theme-aware card background */}
+    {/* Card Glassmorphic Background */}
     <div className="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-2xl transition motion-reduce:transition-none lg:-inset-x-6 lg:block 
-                    lg:group-hover:bg-slate-800/50 dark:lg:group-hover:bg-slate-800/50
-                    lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] 
-                    lg:group-hover:drop-shadow-lg
-                    /* Light mode glassmorphism */
-                    lg:group-hover:backdrop-blur-[10px]
-                    lg:group-hover:border lg:group-hover:border-white/30
-                    lg:group-hover:shadow-[0_8px_32px_0_rgba(31,38,135,0.1)]
-                    /* Light mode background */
-                    lg:group-hover:bg-white/20 dark:lg:group-hover:bg-slate-800/50"></div>
-    <div className="z-10 sm:col-span-3">
+                    lg:group-hover:bg-slate-800/40 dark:lg:group-hover:bg-slate-800/40
+                    lg:group-hover:backdrop-blur-md lg:group-hover:border lg:group-hover:border-slate-700/50"></div>
+
+    <div className="z-10 sm:col-span-3 relative rounded-xl overflow-hidden border border-slate-200/20 dark:border-slate-800 shadow-md group-hover:shadow-xl transition-all">
       <Image
         src={project.image}
         alt={project.title}
         width={400}
         height={225}
-        className="rounded-lg border-2 border-slate-200/10 dark:border-slate-200/10 border-white/30 object-cover shadow-lg cursor-pointer"
-        onClick={onClick}
+        className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-500"
       />
+      <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+        <span className="px-3.5 py-1.5 rounded-full bg-slate-900/90 text-sky-400 text-xs font-mono flex items-center gap-1.5 border border-sky-500/30 shadow-lg">
+          <Maximize2 className="w-3.5 h-3.5" /> Expand Details
+        </span>
+      </div>
     </div>
-    <div className="z-10 sm:col-span-5 p-4">
-      <h3 className="font-medium leading-snug text-slate-800 dark:text-slate-200">
-        <div className="inline-flex items-baseline font-medium leading-tight text-slate-800 dark:text-slate-200 hover:text-sky-600 dark:hover:text-sky-300 focus-visible:text-sky-600 dark:focus-visible:text-sky-300 text-base transition-colors">
-          
-          <span>{project.title}</span>
-        </div>
+
+    <div className="z-10 sm:col-span-5 p-2">
+      <h3 className="font-syne font-bold text-xl leading-snug text-slate-900 dark:text-slate-100 group-hover:text-sky-500 dark:group-hover:text-sky-400 transition-colors">
+        {project.title}
       </h3>
-      <p className="mt-2 text-sm leading-normal text-slate-600 dark:text-slate-300">{project.description}</p>
-      <div className="mt-4 flex gap-4">
-        {project.liveDemoUrl && (
-          <Button asChild>
+      <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300 line-clamp-3">{project.description}</p>
+
+      <div className="mt-4 flex gap-3" onClick={(e) => e.stopPropagation()}>
+        {project.liveDemoUrl && project.liveDemoUrl !== '#' && (
+          <Button size="sm" className="rounded-full shadow-md" asChild>
             <a href={project.liveDemoUrl} target="_blank" rel="noreferrer noopener">
-              <Globe className="mr-2 h-4 w-4" />
+              <Globe className="mr-2 h-3.5 w-3.5" />
               Live Demo
             </a>
           </Button>
         )}
-        {project.githubUrl && (
-          <Button variant="outline" asChild>
+        {project.githubUrl && project.githubUrl !== '#' && (
+          <Button size="sm" variant="outline" className="rounded-full" asChild>
             <a href={project.githubUrl} target="_blank" rel="noreferrer noopener">
-              <Github className="mr-2 h-4 w-4" />
+              <Github className="mr-2 h-3.5 w-3.5" />
               GitHub
             </a>
           </Button>
         )}
       </div>
-      <ul className="mt-4 flex flex-wrap" aria-label="Technologies used">
+
+      <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Technologies used">
         {project.tags.map((tag, index) => (
-          <li key={index} className="mr-1.5 mt-2">
-            <div className="flex items-center rounded-full bg-sky-400/10 px-3 py-1 text-xs font-medium leading-5 text-sky-300 ">{tag}</div>
+          <li key={index}>
+            <div className="rounded-full bg-sky-400/10 dark:bg-sky-400/10 px-3 py-0.5 text-xs font-mono font-medium text-sky-600 dark:text-sky-300 border border-sky-400/20">
+              {tag}
+            </div>
           </li>
         ))}
       </ul>
@@ -82,59 +89,60 @@ const ProjectCard: React.FC<{ project: Project; onClick: () => void }> = ({ proj
   </motion.div>
 );
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
-};
-
-
 const ProjectsSection: React.FC = () => {
-  const [filter, setFilter] = React.useState('All');
-  const [open, setOpen] = React.useState(false);
-  const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [filter, setFilter] = useState('All');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-  const tags = ['All', ...new Set(PROJECTS.flatMap(p => p.tags))];
-
-  const filteredProjects = filter === 'All' ? PROJECTS : PROJECTS.filter(p => p.tags.includes(filter));
-
-  const slides = filteredProjects.map(p => ({ src: p.image }));
+  const filteredProjects = useMemo(() => {
+    if (filter === 'All') return PROJECTS;
+    if (filter === 'React / Next.js') return PROJECTS.filter(p => p.tags.some(t => /react|next/i.test(t)));
+    if (filter === 'AI & Audio ML') return PROJECTS.filter(p => p.tags.some(t => /ai|ml|python|audio|hifi|rag|speech/i.test(t)));
+    if (filter === 'Tailwind & Motion') return PROJECTS.filter(p => p.tags.some(t => /tailwind|framer|motion|css/i.test(t)));
+    if (filter === 'Full-Stack & DB') return PROJECTS.filter(p => p.tags.some(t => /mongodb|firebase|express|node/i.test(t)));
+    return PROJECTS.filter(p => p.tags.includes(filter));
+  }, [filter]);
 
   return (
-    <Section id="projects" title="Projects">
-      <div className="flex flex-wrap gap-2 mb-8">
-        {tags.map(tag => (
-          <Button key={tag} variant={filter === tag ? 'default' : 'outline'} onClick={() => { setFilter(tag); trackEvent('Project Filter Click', { tag }); console.log('Filter clicked:', tag); console.log('Filtered projects:', filteredProjects); }}>
-            {tag}
-          </Button>
-        ))}
+    <Section id="projects" title="Featured Work">
+      {/* Category Filter Buttons */}
+      <div className="flex flex-wrap gap-2.5 mb-10">
+        {FILTER_TAGS.map((tag) => {
+          const isActive = filter === tag;
+          return (
+            <Button
+              key={tag}
+              size="sm"
+              variant={isActive ? 'default' : 'outline'}
+              onClick={() => {
+                setFilter(tag);
+                trackEvent('Project Filter Click', { tag });
+              }}
+              className={`rounded-full font-mono text-xs transition-all duration-300 ${
+                isActive
+                  ? 'bg-sky-500 hover:bg-sky-400 text-white font-bold shadow-lg shadow-sky-500/25'
+                  : 'hover:border-sky-400/50'
+              }`}
+            >
+              {tag}
+            </Button>
+          );
+        })}
       </div>
-       <motion.ul
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-       >
-        {filteredProjects.map((project, index) => (
-          <motion.li key={index} className="mb-12" variants={itemVariants}>
-            <ProjectCard project={project} onClick={() => { setCurrentIndex(index); setOpen(true); }} />
-          </motion.li>
-        ))}
+
+      {/* Projects List with Layout Animations */}
+      <motion.ul className="space-y-10">
+        <AnimatePresence mode="popLayout">
+          {filteredProjects.map((project, index) => (
+            <motion.li key={project.title || index}>
+              <ProjectCard project={project} onClick={() => setSelectedProject(project)} />
+            </motion.li>
+          ))}
+        </AnimatePresence>
       </motion.ul>
-      <Lightbox
-        open={open}
-        close={() => setOpen(false)}
-        slides={slides}
-        index={currentIndex}
+
+      <ProjectDrawer
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
       />
     </Section>
   );

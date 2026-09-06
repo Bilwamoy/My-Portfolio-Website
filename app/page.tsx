@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, Suspense, lazy, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 const AboutSection = lazy(() => import('@/components/AboutSection'));
 const ProjectsSection = lazy(() => import('@/components/ProjectsSection'));
@@ -9,13 +9,18 @@ const SkillsSection = lazy(() => import('@/components/SkillsSection'));
 const ResumeSection = lazy(() => import('@/components/ResumeSection'));
 const ContactSection = lazy(() => import('@/components/ContactSection'));
 const Footer = lazy(() => import('@/components/Footer'));
-import BackgroundCanvas from '@/components/BackgroundCanvas';
+import dynamic from 'next/dynamic';
+const BackgroundCanvas = dynamic(() => import('@/components/BackgroundCanvas'), { ssr: false });
 import HeroSection from '@/components/HeroSection';
 import { PerformanceMonitor, throttle } from '@/lib/performance';
+import CommandPalette from '@/components/CommandPalette';
 
 const BlogSection = lazy(() => import('@/components/BlogSection'));
 const TestimonialsSection = lazy(() => import('@/components/TestimonialsSection'));
 const Enhancements = lazy(() => import('../components/Enhancements'));
+const WhatIDoSection = lazy(() => import('@/components/WhatIDoSection'));
+const ParallaxShowcase = lazy(() => import('@/components/ParallaxShowcase'));
+const VideoHeroSection = lazy(() => import('@/components/VideoHeroSection'));
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component<
@@ -58,7 +63,12 @@ class ErrorBoundary extends React.Component<
 }
 
 export default function Home() {
-  const [cursorPosition, setCursorPosition] = useState({ x: -100, y: -100 });
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
+  const cursorXSpring = useSpring(cursorX, springConfig);
+  const cursorYSpring = useSpring(cursorY, springConfig);
+
   const [isHovering, setIsHovering] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('about');
   const [pageLoaded, setPageLoaded] = useState(false);
@@ -68,16 +78,13 @@ export default function Home() {
   const [isClicked, setIsClicked] = useState(false);
 
   const handleSectionChange = useCallback((sectionId: string) => {
-    setIsAnimating(true);
-    setTimeout(() => {
-      setActiveSection(sectionId);
-      setContentKey(prevKey => prevKey + 1); // Change key to trigger re-render and animation
-      setIsAnimating(false);
-      const section = document.getElementById(sectionId);
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 1000); // 1 second delay for fade out
+    setActiveSection(sectionId);
+    const targetId = sectionId === 'work' ? 'projects' : sectionId;
+    const section = document.getElementById(targetId);
+    if (section) {
+      const topOffset = section.getBoundingClientRect().top + window.pageYOffset - 90;
+      window.scrollTo({ top: topOffset, behavior: 'smooth' });
+    }
   }, []);
 
   useEffect(() => {
@@ -87,7 +94,8 @@ export default function Home() {
     document.body.classList.remove('custom-cursor');
     
     const updateCursorPosition = (e: MouseEvent) => {
-      setCursorPosition({ x: e.clientX, y: e.clientY });
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
     };
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -130,20 +138,24 @@ export default function Home() {
   
 
   useEffect(() => {
-    const sections = document.querySelectorAll('section[id]');
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: '-30% 0px -70% 0px' }
-    );
+    const handleScroll = () => {
+      const navSections = Array.from(document.querySelectorAll<HTMLElement>('[data-nav]'));
+      const scrollPos = window.scrollY + window.innerHeight * 0.35;
 
-    sections.forEach((section) => observer.observe(section));
-    return () => sections.forEach((section) => observer.unobserve(section));
+      let currentNav = 'about';
+      for (let i = navSections.length - 1; i >= 0; i--) {
+        const el = navSections[i];
+        if (scrollPos >= el.offsetTop - 100) {
+          currentNav = el.getAttribute('data-nav') || currentNav;
+          break;
+        }
+      }
+      setActiveSection(currentNav);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Initialize performance monitoring
@@ -179,7 +191,7 @@ export default function Home() {
         <div className="fixed top-0 left-0 w-full h-full -z-10 opacity-100">
           <ErrorBoundary fallback={<div className="fixed inset-0 bg-background" />}>
             <Suspense fallback={<div className="fixed inset-0 bg-background" />}>
-              <BackgroundCanvas cursorPosition={cursorPosition} />
+              <BackgroundCanvas />
             </Suspense>
           </ErrorBoundary>
         </div>
@@ -195,39 +207,38 @@ export default function Home() {
                 backdropFilter: 'blur(5px)',
                 WebkitBackdropFilter: 'blur(5px)',
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                left: cursorXSpring,
+                top: cursorYSpring,
               }}
               animate={{
-                left: cursorPosition.x,
-                top: cursorPosition.y,
                 scale: isClicked ? 2 : (isHovering ? 1.5 : 1),
                 opacity: isHovering ? 0.5 : 1,
               }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             />
             <motion.div
               className="fixed z-[60] h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-400 pointer-events-none hidden md:block"
-              animate={{ left: cursorPosition.x, top: cursorPosition.y }}
-              transition={{ type: 'spring', stiffness: 800, damping: 40 }}
+              style={{ 
+                left: cursorXSpring, 
+                top: cursorYSpring 
+              }}
             />
           </>
         
-        <div className="relative z-10 mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
-          <div className="flex flex-col">
-            <header className="py-12 md:py-16 lg:py-20">
-              <div className="max-w-screen-xl mx-auto px-6 md:px-12 lg:px-24 flex flex-col lg:flex-row lg:items-center lg:justify-between h-full">
-                <div className="flex-1">
-                  <ErrorBoundary>
-                    <HeroSection />
-                  </ErrorBoundary>
-                </div>
-                <div className="flex-shrink-0">
-                  <ErrorBoundary>
-                    <Navbar activeSection={activeSection} onSectionChange={handleSectionChange} />
-                  </ErrorBoundary>
-                </div>
+        {/* Floating Top Navbar */}
+        <ErrorBoundary>
+          <Navbar activeSection={activeSection} onSectionChange={handleSectionChange} />
+        </ErrorBoundary>
+
+        <div className="relative z-10 mx-auto min-h-screen max-w-7xl px-4 sm:px-6 lg:px-8 py-6 md:py-10">
+          <div className="flex flex-col w-full">
+            <header className="pt-16 pb-6 md:pt-20 md:pb-10 w-full">
+              <div className="w-full">
+                <ErrorBoundary>
+                  <HeroSection />
+                </ErrorBoundary>
               </div>
             </header>
-            <main id="content" className="flex-1 overflow-y-auto px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
+            <main id="content" className="flex-1 w-full">
               <motion.div
                 key={contentKey}
                 initial={{ opacity: 0 }}
@@ -239,25 +250,34 @@ export default function Home() {
                   <>
                     {/* Enhancements component mounts global smooth scroll and back-to-top */}
                     <Enhancements />
-                    <section data-animate='fade-up'>
+                    <section data-animate='fade-up' data-nav="about">
                       <AboutSection />
                     </section>
-                    <section data-animate='fade-up'>
+                    <section data-animate='fade-up' data-nav="about">
+                      <WhatIDoSection />
+                    </section>
+                    <section data-animate='fade-up' data-nav="projects">
+                      <VideoHeroSection />
+                    </section>
+                    <section data-animate='fade-up' data-nav="projects">
                       <ProjectsSection />
                     </section>
-                    <section data-animate='fade-up'>
+                    <section data-animate='fade-up' data-nav="projects">
+                      <ParallaxShowcase />
+                    </section>
+                    <section data-animate='fade-up' data-nav="skills">
                       <SkillsSection />
                     </section>
-                    <section data-animate='fade-up'>
+                    <section data-animate='fade-up' data-nav="resume">
                       <ResumeSection />
                     </section>
-                    <section data-animate='fade-up'>
+                    <section data-animate='fade-up' data-nav="resume">
                       <BlogSection />
                     </section>
-                    <section data-animate='fade-up'>
+                    <section data-animate='fade-up' data-nav="resume">
                       <TestimonialsSection />
                     </section>
-                    <section data-animate='fade-up'>
+                    <section data-animate='fade-up' data-nav="contact">
                       <ContactSection />
                     </section>
                     <Footer />
@@ -267,6 +287,7 @@ export default function Home() {
             </main>
           </div>
         </div>
+        <CommandPalette />
       </motion.div>
     </ErrorBoundary>
   );

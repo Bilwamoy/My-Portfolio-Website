@@ -1,24 +1,59 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+'use client';
 
-// Interface for component props, keeping it for good practice.
+import React, { useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
 interface LoadingScreenProps {
   onLoadingComplete: () => void;
   minLoadingTime?: number;
 }
 
-// --- Helper Component: Digital Rain Background ---
-// This component creates a "Matrix-style" background using HTML Canvas for better performance.
-const DigitalRain: React.FC = () => {
+interface Particle3D {
+  x: number;
+  y: number;
+  z: number;
+  ox: number;
+  oy: number;
+  oz: number;
+  radius: number;
+  color: string;
+}
+
+export const LoadingScreen: React.FC<LoadingScreenProps> = ({
+  onLoadingComplete,
+  minLoadingTime = 2200,
+}) => {
+  const [progress, setProgress] = useState(0);
+  const [isExiting, setIsExiting] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const setupCanvas = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-  }, []);
+  // Smooth counter progress
+  useEffect(() => {
+    const startTime = Date.now();
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const calculatedProgress = Math.min(100, Math.floor((elapsed / minLoadingTime) * 100));
 
+      // Add slight ease-out to progress percentage display
+      const easedProgress = Math.round(100 * Math.sin((calculatedProgress / 100) * (Math.PI / 2)));
+      setProgress(Math.max(calculatedProgress, easedProgress));
+
+      if (elapsed >= minLoadingTime) {
+        clearInterval(interval);
+        setProgress(100);
+        setTimeout(() => {
+          setIsExiting(true);
+          setTimeout(() => {
+            onLoadingComplete();
+          }, 800);
+        }, 300);
+      }
+    }, 25);
+
+    return () => clearInterval(interval);
+  }, [minLoadingTime, onLoadingComplete]);
+
+  // 3D Particle Constellation Ring Canvas Animation
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -26,229 +61,192 @@ const DigitalRain: React.FC = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
-    
-    setupCanvas();
+    let animId: number;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const fontSize = 16;
-    const columns = Math.floor(canvas.width / fontSize);
-    const drops = Array.from({ length: columns }).fill(1).map(() => Math.floor(Math.random() * canvas.height));
-
-    const draw = () => {
-      // Create a semi-transparent black rectangle to create the fading trail effect
-      ctx.fillStyle = 'rgba(10, 10, 25, 0.05)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Set color and font for the falling characters
-      ctx.fillStyle = '#00f0c0'; // A vibrant cyan color
-      ctx.font = `${fontSize}px monospace`;
-
-      for (let i = 0; i < drops.length; i++) {
-        const text = characters.charAt(Math.floor(Math.random() * characters.length));
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-        // Reset drop to the top randomly to make the rain effect uneven and continuous
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-        drops[i]++;
-      }
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
     };
 
-    let lastTimestamp = 0;
-    const fps = 24; // Throttle to 24 FPS
-    const frameInterval = 1000 / fps;
+    window.addEventListener('resize', handleResize);
 
-    const animate = (timestamp: number) => {
-      animationFrameId = window.requestAnimationFrame(animate);
-      const elapsed = timestamp - lastTimestamp;
+    // Create 3D particles on a ring / sphere surface
+    const particleCount = 140;
+    const particles: Particle3D[] = [];
+    const radius = Math.min(width, height) * 0.22;
 
-      if (elapsed > frameInterval) {
-        lastTimestamp = timestamp - (elapsed % frameInterval);
-        draw();
-      }
-    };
-
-    animationFrameId = window.requestAnimationFrame(animate);
-    
-    const debounce = (func: () => void, delay: number) => {
-      let timeoutId: NodeJS.Timeout;
-      return () => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(func, delay);
-      };
-    };
-
-    const debouncedSetupCanvas = debounce(setupCanvas, 300);
-    window.addEventListener('resize', debouncedSetupCanvas);
-
-    // Cleanup function to cancel animation frame and remove event listener
-    return () => {
-      window.cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', debouncedSetupCanvas);
-    };
-  }, [setupCanvas]);
-
-  return <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full z-0" />;
-};
-
-
-// --- Helper Component: Humanoid Robot SVG ---
-// A more detailed and sleek robot design using SVG. Animations are done with CSS.
-const HumanoidRobot: React.FC = () => {
-  return (
-    <div className="relative w-48 h-64">
-        {/* Using a standard style tag to avoid styled-jsx issues */}
-        <style>{`
-            @keyframes pulse-glow {
-                0%, 100% { opacity: 0.7; }
-                50% { opacity: 1; }
-            }
-            .eye-scan {
-                animation: scan 4s linear infinite;
-            }
-            @keyframes scan {
-                0%, 100% { transform: translateX(-6px); }
-                50% { transform: translateX(6px); }
-            }
-            @keyframes float {
-                0%, 100% { transform: translateY(0px); }
-                50% { transform: translateY(-10px); }
-            }
-            .robot-body {
-                animation: float 6s ease-in-out infinite;
-            }
-        `}</style>
-      <svg viewBox="0 0 150 200" className="w-full h-full robot-body">
-        <defs>
-          <filter id="robot-glow-filter">
-            <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-        {/* Head */}
-        <path d="M50 40 C 50 15, 100 15, 100 40 L 110 70 L 40 70 Z" fill="#B0B0C0" />
-        <path d="M45 70 L 105 70 L 100 85 L 50 85 Z" fill="#808090" />
-        
-        {/* Faceplate / Visor */}
-        <g filter="url(#robot-glow-filter)">
-          <rect x="50" y="45" width="50" height="20" rx="5" fill="#101020" stroke="#00f0c0" strokeWidth="1" />
-          <rect x="67" y="52" width="16" height="6" fill="#00f0c0" className="eye-scan" />
-        </g>
-
-        {/* Torso */}
-        <path d="M40 90 L 110 90 L 95 150 L 55 150 Z" fill="#B0B0C0" />
-        <path d="M60 95 L 90 95 L 85 140 L 65 140 Z" fill="#101020" stroke="#00f0c0" strokeWidth="1" />
-
-        {/* Core Light */}
-        <circle cx="75" cy="115" r="8" fill="#00f0c0" style={{ animation: 'pulse-glow 2s infinite' }} filter="url(#robot-glow-filter)" />
-
-        {/* Shoulders */}
-        <circle cx="40" cy="95" r="10" fill="#808090" />
-        <circle cx="110" cy="95" r="10" fill="#808090" />
-
-        {/* Arms */}
-        <rect x="30" y="100" width="10" height="50" rx="5" fill="#B0B0C0" />
-        <rect x="110" y="100" width="10" height="50" rx="5" fill="#B0B0C0" />
-      </svg>
-    </div>
-  );
-};
-
-
-// --- Main Loading Screen Component ---
-const LoadingScreen: React.FC<LoadingScreenProps> = ({
-  onLoadingComplete,
-  minLoadingTime = 4000, // A slightly shorter time feels snappier
-}) => {
-  const [progress, setProgress] = useState(0);
-  const [message, setMessage] = useState("Booting up consciousness...");
-  const [fadeOut, setFadeOut] = useState(false);
-  const startTimeRef = useRef(Date.now());
-
-  // Memoize the completion handler to prevent re-creation on re-renders.
-  const handleComplete = useCallback(() => {
-    setFadeOut(true);
-    // Wait for the fade-out animation to finish before calling onLoadingComplete
-    setTimeout(() => {
-      // FIX: Add a check to ensure onLoadingComplete is a function before calling it.
-      if (typeof onLoadingComplete === 'function') {
-        onLoadingComplete();
-      }
-    }, 500);
-  }, [onLoadingComplete]);
-
-  useEffect(() => {
-    const messages = [
-      "Booting up consciousness...",
-      "Compiling neural networks...",
-      "Calibrating sensory input...",
-      "Finalizing initialization sequence...",
-    ];
-
-    const progressInterval = setInterval(() => {
-      const elapsedTime = Date.now() - startTimeRef.current;
-      const currentProgress = Math.min(Math.floor((elapsedTime / minLoadingTime) * 100), 100);
-
-      setProgress(currentProgress);
-
-      if (currentProgress >= 75) {
-        setMessage(messages[3]);
-      } else if (currentProgress >= 50) {
-        setMessage(messages[2]);
-      } else if (currentProgress >= 25) {
-        setMessage(messages[1]);
-      }
-
-      if (currentProgress >= 100) {
-        clearInterval(progressInterval);
-        handleComplete();
-      }
-    }, 100); // Update progress every 100ms
-
-    return () => {
-      clearInterval(progressInterval);
-    };
-  }, [minLoadingTime, handleComplete]);
-
-  return (
-    <div
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0a0a19] transition-opacity duration-500 ${
-        fadeOut ? 'opacity-0' : 'opacity-100'
-      }`}
-    >
-      <DigitalRain />
+    for (let i = 0; i < particleCount; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(Math.random() * 2 - 1);
       
-      {/* Main Content Container */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center p-4">
-        
-        <HumanoidRobot />
+      const x = radius * Math.sin(phi) * Math.cos(theta);
+      const y = radius * Math.sin(phi) * Math.sin(theta);
+      const z = radius * Math.cos(phi);
 
-        <div className="w-full max-w-sm mt-8">
-            {/* Loading Message */}
-            <p className="text-cyan-300 font-mono text-lg mb-4 h-6">
-                {message}
-            </p>
+      const isGold = Math.random() > 0.75;
+      particles.push({
+        x, y, z,
+        ox: x, oy: y, oz: z,
+        radius: Math.random() * 1.8 + 1,
+        color: isGold ? '#fbbf24' : '#38bdf8',
+      });
+    }
 
-            {/* Progress Bar */}
-            <div className="w-full bg-gray-800/50 rounded-full h-2.5 backdrop-blur-sm border border-cyan-500/20">
-                <div
-                    className="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full rounded-full transition-width duration-150 ease-linear"
-                    style={{ width: `${progress}%` }}
-                ></div>
-            </div>
-            
-            {/* Progress Percentage */}
-            <p className="text-emerald-400 font-mono text-sm mt-2">
+    let angleX = 0;
+    let angleY = 0;
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      // Rotate light/dark ambient gradient fill
+      const grad = ctx.createRadialGradient(width / 2, height / 2, 0, width / 2, height / 2, radius * 2);
+      grad.addColorStop(0, 'rgba(56, 189, 248, 0.08)');
+      grad.addColorStop(0.5, 'rgba(251, 191, 36, 0.03)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, width, height);
+
+      angleX += 0.008;
+      angleY += 0.012;
+
+      const cosX = Math.cos(angleX);
+      const sinX = Math.sin(angleX);
+      const cosY = Math.cos(angleY);
+      const sinY = Math.sin(angleY);
+
+      // Project 3D to 2D
+      const projected = particles.map((p) => {
+        // Rotate Y
+        let x1 = p.ox * cosY - p.oz * sinY;
+        let z1 = p.ox * sinY + p.oz * cosY;
+
+        // Rotate X
+        let y1 = p.oy * cosX - z1 * sinX;
+        let z2 = p.oy * sinX + z1 * cosX;
+
+        // Perspective scale
+        const fov = 400;
+        const scale = fov / (fov + z2 + 300);
+        const px = width / 2 + x1 * scale;
+        const py = height / 2 + y1 * scale;
+
+        return { px, py, scale, z: z2, color: p.color, radius: p.radius * scale };
+      });
+
+      // Sort by Z for realistic depth render
+      projected.sort((a, b) => b.z - a.z);
+
+      // Draw connecting lines (constellation)
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < projected.length; i++) {
+        for (let j = i + 1; j < projected.length; j++) {
+          const dx = projected[i].px - projected[j].px;
+          const dy = projected[i].py - projected[j].py;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 65) {
+            const alpha = (1 - dist / 65) * 0.25 * Math.min(projected[i].scale, projected[j].scale);
+            ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(projected[i].px, projected[i].py);
+            ctx.lineTo(projected[j].px, projected[j].py);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw particle nodes
+      projected.forEach((p) => {
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0.2, Math.min(1, p.scale));
+        ctx.beginPath();
+        ctx.arc(p.px, p.py, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Glow ring around prominent nodes
+        if (p.radius > 1.5) {
+          ctx.strokeStyle = p.color;
+          ctx.lineWidth = 0.4;
+          ctx.beginPath();
+          ctx.arc(p.px, p.py, p.radius * 2.2, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      });
+
+      ctx.globalAlpha = 1;
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {!isExiting && (
+        <motion.div
+          key="loader-container"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }}
+          transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-between bg-slate-950 text-slate-100 overflow-hidden select-none"
+        >
+          {/* Background 3D Canvas */}
+          <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
+
+          {/* Top Bar Metadata */}
+          <div className="w-full max-w-7xl px-8 pt-8 flex items-center justify-between z-10 text-xs font-mono tracking-widest text-slate-400 uppercase">
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              SYSTEM ACTIVE
+            </span>
+            <span>BILWAMOY CHAKRABORTY</span>
+            <span>PORTFOLIO '26</span>
+          </div>
+
+          {/* Center Interactive Core */}
+          <div className="relative z-10 flex flex-col items-center justify-center my-auto">
+            {/* Progress Percentage Display */}
+            <div className="relative mb-6">
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="font-syne text-7xl sm:text-9xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-amber-300 to-cyan-300 drop-shadow-2xl"
+              >
                 {progress}%
+              </motion.span>
+            </div>
+
+            {/* Glowing Loading Bar */}
+            <div className="w-48 sm:w-64 h-[2px] bg-slate-800 rounded-full overflow-hidden relative">
+              <motion.div
+                className="h-full bg-gradient-to-r from-sky-400 via-amber-400 to-cyan-400 shadow-[0_0_12px_#38bdf8]"
+                style={{ width: `${progress}%` }}
+                transition={{ ease: 'easeOut', duration: 0.2 }}
+              />
+            </div>
+
+            {/* Subtitle */}
+            <p className="mt-4 text-xs font-mono uppercase tracking-[0.3em] text-slate-400">
+              INITIALIZING CREATIVE EXPERIENCE...
             </p>
-        </div>
-      </div>
-    </div>
+          </div>
+
+          {/* Bottom Bar Footer */}
+          <div className="w-full max-w-7xl px-8 pb-8 flex items-center justify-between z-10 text-[11px] font-mono text-slate-500">
+            <span>LOCATION: BARASAT, INDIA</span>
+            <span>DESIGN + CODE</span>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

@@ -1,9 +1,12 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     // Performance optimizations
     experimental: {
         optimizeCss: true,
     },
+    transpilePackages: ['three', '@react-three/fiber', '@react-three/drei'],
     // Optimize images
     images: {
         minimumCacheTTL: 60,

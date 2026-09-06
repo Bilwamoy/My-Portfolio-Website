@@ -49,7 +49,7 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({ texts, className = ''
 
   return (
     <span className={className}>
-      <span className="text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 bg-clip-text font-bold drop-shadow-lg" style={{ fontFamily: 'Algerian, serif', textShadow: '0 0 10px rgba(59, 130, 246, 0.5)' }}>
+      <span className="text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 bg-clip-text font-bold drop-shadow-lg" style={{ fontFamily: 'var(--font-space-grotesk), sans-serif', textShadow: '0 0 10px rgba(59, 130, 246, 0.5)' }}>
         {currentText}
       </span>
       <motion.span
@@ -66,22 +66,20 @@ const TypingAnimation: React.FC<TypingAnimationProps> = ({ texts, className = ''
 const ProfileImage = ({ className = '', size = 'w-[150px] h-[150px]' }) => {
   const { theme } = useTheme();
   
-  // Define colors based on theme to match the background
-  const bgColor = theme === 'dark' ? 'bg-slate-900' : 'bg-white';
-  const imageBgColor = theme === 'dark' ? '#1e293b' : '#ffffff';
-  const glowColor = theme === 'dark' ? 'rgba(56, 189, 248, 0.3)' : 'rgba(34, 197, 94, 0.3)';
-  const circleColor = theme === 'dark' ? '#38bdf8' : '#22c55e';
+  // Define colors for glassmorphism
+  const glowColor = theme === 'dark' ? 'rgba(56, 189, 248, 0.4)' : 'rgba(14, 165, 233, 0.3)';
+  const circleColor = theme === 'dark' ? '#38bdf8' : '#0ea5e9';
   
   return (
     <div className={`relative flex items-center justify-center ${className}`}>
-      {/* Main container with glowing effect */}
-      <div className={`relative ${bgColor} rounded-full p-1 profile-container`}>
+      {/* Main container with glassmorphism glowing effect */}
+      <div className={`relative rounded-full p-1 profile-container`}>
         {/* Spinning circle */}
         <div 
           className="absolute inset-0 rounded-full spinning-circle"
           style={{
             background: `conic-gradient(from 0deg, transparent, ${circleColor}, transparent, ${circleColor}, transparent)`,
-            animation: 'spin 3s linear infinite'
+            animation: 'spin 4s linear infinite'
           }}
         />
         
@@ -90,23 +88,22 @@ const ProfileImage = ({ className = '', size = 'w-[150px] h-[150px]' }) => {
           className="absolute inset-2 rounded-full opacity-60"
           style={{
             background: `radial-gradient(circle, ${glowColor} 0%, transparent 70%)`,
-            animation: 'pulse 2s ease-in-out infinite'
+            animation: 'pulse 3s ease-in-out infinite'
           }}
         />
         
         {/* Image container */}
-        <div className={`relative ${bgColor} rounded-full p-2`}>
+        <div className={`relative rounded-full p-2 bg-white/10 dark:bg-black/20 backdrop-blur-md overflow-hidden border border-white/20 dark:border-white/10`}>
           <Image 
             src="/me.png" 
             alt="A portrait of Bilwamoy Chakraborty, the developer."
             width={150}
             height={150}
-            className={`${size} rounded-full object-cover relative z-10`}
+            className={`${size} rounded-full object-cover relative z-10 transition-transform duration-500 hover:scale-110`}
             style={{
               border: 'none',
               outline: 'none',
-              backgroundColor: imageBgColor,
-              mixBlendMode: theme === 'dark' ? 'normal' : 'multiply'
+              mixBlendMode: theme === 'dark' ? 'screen' : 'multiply'
             }}
           />
           
@@ -154,9 +151,8 @@ const ProfileImage = ({ className = '', size = 'w-[150px] h-[150px]' }) => {
         
         .profile-container {
           box-shadow: 0 0 30px ${glowColor};
-          backdrop-filter: blur(10px);
-          background: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(12px);
+          background: rgba(255, 255, 255, 0.05);
         }
         
         .spinning-circle {
@@ -176,11 +172,11 @@ const ProfileImage = ({ className = '', size = 'w-[150px] h-[150px]' }) => {
         }
         
         .profile-container:hover .spinning-circle {
-          animation-duration: 1s;
+          animation-duration: 1.5s;
         }
         
         .profile-container:hover .afterglow {
-          animation-duration: 1.5s;
+          animation-duration: 2s;
         }
       `}</style>
     </div>
@@ -222,9 +218,9 @@ const HeroSection: React.FC = () => {
       <div className="w-full max-w-2xl">
         <motion.h1
           variants={itemVariants}
-          className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight text-slate-800 dark:text-slate-200 font-orbitron break-words"
+          className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight text-slate-900 dark:text-slate-100 font-syne break-words"
         >
-          <a href="/">{PERSONAL_INFO.name}</a>
+          <a href="/" className="hover:text-sky-400 transition-colors">{PERSONAL_INFO.name}</a>
         </motion.h1>
         <motion.h2
           variants={itemVariants}

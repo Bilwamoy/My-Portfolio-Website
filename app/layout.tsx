@@ -1,11 +1,24 @@
 import './globals.css';
 import 'antd/dist/reset.css'; // Ant Design base styles
-import { Sora, Orbitron } from 'next/font/google';
+import { Syne, Inter, Sora, Orbitron, Space_Grotesk } from 'next/font/google';
 import { Providers } from './providers';
 import { siteConfig } from '@/lib/site';
 
 // This metadata object will now be used by Next.js
 export { metadata } from './metadata';
+
+const syne = Syne({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-syne',
+  weight: ['400', '600', '700', '800'],
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 const sora = Sora({
   subsets: ['latin'],
@@ -19,14 +32,21 @@ const orbitron = Orbitron({
   variable: '--font-orbitron',
 });
 
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-space-grotesk',
+});
+
 import LenisProvider from '@/components/LenisProvider';
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
-}) {  return (
-    <html lang="en" className={`scroll-smooth ${sora.variable} ${orbitron.variable}`} suppressHydrationWarning>
+}) {
+  return (
+    <html lang="en" className={`scroll-smooth ${syne.variable} ${inter.variable} ${sora.variable} ${orbitron.variable} ${spaceGrotesk.variable}`} suppressHydrationWarning>
       <body>
         <Providers>
           <LenisProvider>{children}</LenisProvider>
