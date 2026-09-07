@@ -37,7 +37,7 @@ const Enhancements: React.FC = () => {
     elements.forEach((el) => {
       gsap.fromTo(
         el,
-        { autoAlpha: 0, y: 40 },
+        { autoAlpha: 0, y: 30 },
         {
           autoAlpha: 1,
           y: 0,
@@ -45,8 +45,8 @@ const Enhancements: React.FC = () => {
           ease: "power3.out",
           scrollTrigger: {
             trigger: el,
-            start: "top 85%",
-            toggleActions: "play none none reverse",
+            start: "top 90%",
+            toggleActions: "play none none none",
           },
         }
       );

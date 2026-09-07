@@ -20,10 +20,8 @@ export const VideoHeroSection: React.FC = () => {
   const videoOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.6, 1, 1, 0.7]);
 
   const isDark = resolvedTheme === 'dark';
-  // User directive: Dark mode uses Tech_portfolio_animation_glows; Light mode uses Tech_portfolio_animation_glowing
-  const videoSrc = isDark
-    ? '/Tech_portfolio_animation_glows_1080p_202609061502.mp4'
-    : '/Tech_portfolio_animation_glowing_1080p_202609061502.mp4';
+  // Dark mode uses /Dark.mp4; Light mode uses /Light.mp4
+  const videoSrc = isDark ? '/Dark.mp4' : '/Light.mp4';
 
   // Scrub video currentTime smoothly according to scroll progress when paused or scrolling
   useEffect(() => {
