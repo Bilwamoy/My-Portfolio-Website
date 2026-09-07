@@ -2,10 +2,10 @@ export const siteConfig = {
   name: "Bilwamoy Chakraborty | Creative Full-Stack Developer",
   description:
     "Explore the portfolio of Bilwamoy Chakraborty, a passionate and results-driven Full-Stack Developer specializing in React, Next.js, and Node.js. Discover innovative projects, technical skills, and professional experience.",
-  url: process.env.NODE_ENV === 'development' ? "http://localhost:3000" : "https://your-domain.com", // Replace with your actual domain
-  ogImage: process.env.NODE_ENV === 'development' ? "http://localhost:3000/og-image.png" : "https://your-domain.com/og-image.png", // Replace with your actual OG image URL
+  url: process.env.NEXT_PUBLIC_SITE_URL || (process.env.NODE_ENV === 'development' ? "http://localhost:3000" : "https://bilwamoy-portfolio.vercel.app"),
+  ogImage: "/me.png",
   links: {
-    twitter: "https://twitter.com/your-twitter-handle", // Replace with your Twitter handle
+    twitter: "https://twitter.com/joygaara",
     github: "https://github.com/joygaara",
   },
   keywords: [

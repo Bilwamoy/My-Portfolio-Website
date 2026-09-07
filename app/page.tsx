@@ -1,26 +1,25 @@
 'use client';
 
-import React, { useState, useEffect, Suspense, lazy, useCallback } from 'react';
+import React, { useState, useEffect, Suspense, useCallback } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import Navbar from '@/components/Navbar';
-const AboutSection = lazy(() => import('@/components/AboutSection'));
-const ProjectsSection = lazy(() => import('@/components/ProjectsSection'));
-const SkillsSection = lazy(() => import('@/components/SkillsSection'));
-const ResumeSection = lazy(() => import('@/components/ResumeSection'));
-const ContactSection = lazy(() => import('@/components/ContactSection'));
-const Footer = lazy(() => import('@/components/Footer'));
+import AboutSection from '@/components/AboutSection';
+import ProjectsSection from '@/components/ProjectsSection';
+import SkillsSection from '@/components/SkillsSection';
+import ResumeSection from '@/components/ResumeSection';
+import ContactSection from '@/components/ContactSection';
+import Footer from '@/components/Footer';
 import dynamic from 'next/dynamic';
 const BackgroundCanvas = dynamic(() => import('@/components/BackgroundCanvas'), { ssr: false });
 import HeroSection from '@/components/HeroSection';
 import { PerformanceMonitor, throttle } from '@/lib/performance';
 import CommandPalette from '@/components/CommandPalette';
-
-const BlogSection = lazy(() => import('@/components/BlogSection'));
-const TestimonialsSection = lazy(() => import('@/components/TestimonialsSection'));
-const Enhancements = lazy(() => import('../components/Enhancements'));
-const WhatIDoSection = lazy(() => import('@/components/WhatIDoSection'));
-const ParallaxShowcase = lazy(() => import('@/components/ParallaxShowcase'));
-const VideoHeroSection = lazy(() => import('@/components/VideoHeroSection'));
+import BlogSection from '@/components/BlogSection';
+import TestimonialsSection from '@/components/TestimonialsSection';
+import Enhancements from '@/components/Enhancements';
+import WhatIDoSection from '@/components/WhatIDoSection';
+import ParallaxShowcase from '@/components/ParallaxShowcase';
+import VideoHeroSection from '@/components/VideoHeroSection';
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component<
