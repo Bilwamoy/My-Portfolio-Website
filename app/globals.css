@@ -130,45 +130,11 @@
 }
 
 /* ─── SCROLL-TRIGGERED ANIMATIONS ─── */
+/* GSAP + ScrollTrigger handles all reveal animations via inline styles (autoAlpha).
+   No CSS opacity:0 defaults are set here to avoid conflicts. */
 
 [data-animate] {
   will-change: transform, opacity;
-}
-
-[data-animate="fade-up"] {
-  opacity: 0;
-  transform: translateY(40px);
-}
-
-[data-animate="fade-up"].is-visible {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-[data-animate="scale-in"] {
-  opacity: 0;
-  transform: scale(0.92);
-}
-
-[data-animate="scale-in"].is-visible {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-[data-animate="slide-right"] {
-  opacity: 0;
-  transform: translateX(-60px);
-}
-
-[data-animate="slide-right"].is-visible {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ─── PROJECT OVERLAY ─── */

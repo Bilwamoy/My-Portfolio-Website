@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode, useEffect, useRef } from 'react';
+import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 
 interface SectionProps {
@@ -10,17 +10,8 @@ interface SectionProps {
 }
 
 const Section: React.FC<SectionProps> = ({ id, title, children }) => {
-  const ref = useRef<HTMLElement | null>(null);
-
-  // Keep behavior identical while adding a data attribute for GSAP hooks
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.setAttribute('data-animate', 'fade-up');
-    }
-  }, []);
-
   return (
-    <section ref={ref} id={id} className="py-24 border-t border-slate-300/30 dark:border-slate-800">
+    <section id={id} className="py-24 border-t border-slate-300/30 dark:border-slate-800">
       <div className="mb-8">
         <motion.h2 
           initial={{ opacity: 0, x: -20 }}
@@ -36,3 +27,4 @@ const Section: React.FC<SectionProps> = ({ id, title, children }) => {
 };
 
 export default Section;
+
